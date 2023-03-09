@@ -12,12 +12,24 @@ public class ClientTCP {
             System.out.println("Saisir le serveur et le port");
         }
         Scanner scanner =  new Scanner(System.in);
+
         InetSocketAddress adress = new InetSocketAddress(1234);
         Socket s = new Socket();
         s.connect(adress);
-        System.out.print("Hello,Choose a username :");
+        System.out.print("Welcome, choose a username :");
         String username = scanner.nextLine();
-        String message ="@"+username;
+        String publish="yes";
+        String message;
+/*
+        do {
+            System.out.println("Do you want to publish your next messages ? yes/no");
+            publish = scanner.nextLine();
+        } while (!publish.equals("yes") && !publish.equals("no"));*/
+
+        if (publish == "yes")
+            message ="PUBLISH@"+username;
+        else
+            message ="@"+username;
 
         while(scanner.hasNextLine()){
             String textImput = scanner.nextLine()+"\n";
