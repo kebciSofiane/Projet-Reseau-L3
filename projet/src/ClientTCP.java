@@ -18,15 +18,15 @@ public class ClientTCP {
         s.connect(adress);
         System.out.print("Welcome, choose a username :");
         String username = scanner.nextLine();
-        String publish="yes";
+        String publish;
         String message;
-/*
+
         do {
             System.out.println("Do you want to publish your next messages ? yes/no");
             publish = scanner.nextLine();
-        } while (!publish.equals("yes") && !publish.equals("no"));*/
+        } while (!publish.equals("yes") && !publish.equals("no"));
 
-        if (publish == "yes")
+        if (publish.equals("yes"))
             message ="PUBLISH@"+username;
         else
             message ="@"+username;

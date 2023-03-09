@@ -31,7 +31,6 @@ public class ClientHandler extends Thread {
             while ((line = in.readLine()) != null) {
                 if (username== ""){
                     username = line.substring(line.indexOf("@"),line.indexOf("#")).trim();
-                    System.out.println(line.substring(0,line.indexOf("@")).trim());
                     if (line.substring(0,line.indexOf("@")).trim().equals("PUBLISH")){
                         publish=true;
                 }
