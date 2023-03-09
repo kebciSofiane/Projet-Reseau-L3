@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class ClientHandler extends Thread {
     private final Socket socket;
     String username = "";
     Boolean publish=false;
+    Map<String, ArrayList<String>> messages = new HashMap<>();
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -36,12 +40,26 @@ public class ClientHandler extends Thread {
                 }
                 }
 
-                if (publish)
+                String message = line.substring(line.indexOf("#")+1);
+                if (messages.keySet().contains(username))
+                {
+                    ArrayList<String> m= messages.get(username);
+                    m.add(message);
+                    messages.put(username,m);
+                } else
+                {
+                    ArrayList<String> firstMessage = new ArrayList<>();
+                    firstMessage.add(message);
+                    messages.put(username,firstMessage);
+                }
+                if (publish){
                 System.out.printf(
                         "-> %s\n",
-                        username+": "+line.substring(line.indexOf("#")+1));
-                //out.println(username+": "+line.substring(2));
+                        username+": "+message);
+                out.println("-> ok");
+                }
             }
+            System.out.println(messages);
 
         } catch (IOException e) {
             throw new RuntimeException(e);

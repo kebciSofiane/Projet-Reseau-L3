@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 public class ServerTCP {
     public static void main(String[] args) throws IOException
     {
-        ServerSocket myserverSocket = new ServerSocket(1234);
+        ServerSocket myserverSocket = new ServerSocket(12345);
         ExecutorService executor = Executors.newCachedThreadPool();
 
         while (true)
@@ -21,6 +21,7 @@ public class ServerTCP {
                 Thread myThread = new ClientHandler(mynewSocket);
                 executor.submit(myThread);
                 myThread.start();
+
             }
             catch (Exception e){
                 mynewSocket.close();
