@@ -14,7 +14,6 @@ public class ClientHandler extends Thread {
     String username = "";
     Boolean publish=false;
     Map<String, ArrayList<String>> messages = new HashMap<>();
-
     public ClientHandler(Socket socket) {
         this.socket = socket;
     }
@@ -39,19 +38,8 @@ public class ClientHandler extends Thread {
                         publish=true;
                 }
                 }
-
                 String message = line.substring(line.indexOf("#")+1);
-                if (messages.keySet().contains(username))
-                {
-                    ArrayList<String> m= messages.get(username);
-                    m.add(message);
-                    messages.put(username,m);
-                } else
-                {
-                    ArrayList<String> firstMessage = new ArrayList<>();
-                    firstMessage.add(message);
-                    messages.put(username,firstMessage);
-                }
+                ServerTCP.addMessage(message,username);
                 if (publish){
                 System.out.printf(
                         "-> %s\n",
@@ -59,7 +47,7 @@ public class ClientHandler extends Thread {
                 out.println("-> ok");
                 }
             }
-            System.out.println(messages);
+            System.out.println(ServerTCP.messages);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
