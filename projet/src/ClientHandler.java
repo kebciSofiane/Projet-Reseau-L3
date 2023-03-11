@@ -13,7 +13,6 @@ public class ClientHandler extends Thread {
     private final Socket socket;
     String username = "";
     Boolean publish=false;
-    int id =-1;
     Map<String, ArrayList<String>> messages = new HashMap<>();
     public ClientHandler(Socket socket) {
         this.socket = socket;
