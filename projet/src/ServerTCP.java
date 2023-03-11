@@ -9,6 +9,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ServerTCP {
+    // TODO: 11/03/2023
+// faut pas ajouter les donner une fois arrivées dans le serveur ?
 
     static int id =0;
     static Map<String, ArrayList<Map<Integer, String>>> messages = new HashMap<>();

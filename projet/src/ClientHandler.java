@@ -13,6 +13,7 @@ public class ClientHandler extends Thread {
     private final Socket socket;
     String username = "";
     Boolean publish=false;
+    int id =-1;
     Map<String, ArrayList<String>> messages = new HashMap<>();
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -29,7 +30,6 @@ public class ClientHandler extends Thread {
             in = new BufferedReader(
                     new InputStreamReader(
                             socket.getInputStream()));
-
             String line ;
             while ((line = in.readLine()) != null) {
                 if (username== ""){
@@ -39,7 +39,9 @@ public class ClientHandler extends Thread {
                 }
                 }
                 String message = line.substring(line.indexOf("#")+1);
-                ServerTCP.addMessage(message,username);
+                DataBaseRequests.updateData("INSERT INTO MESSAGES VALUES(2,'@Mériem','hiifazzzzzzvgiii')");
+                /*DataBaseRequests.updateData("Insert into Messages values("+
+                                DataBaseRequests.findId()+",'"+username+"','"+message+"');");*/
                 if (publish){
                 System.out.printf(
                         "-> %s\n",
