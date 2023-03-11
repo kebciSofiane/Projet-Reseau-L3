@@ -17,9 +17,8 @@ public class DataBaseRequests
             /*stmt.executeUpdate("create table MESSAGES (" +
                     "ID int PRIMARY KEY AUTO_INCREMENT," +
                     "USERNAME VARCHAR(20)," +
-                    "MESSAGE VARCHAR(255) " +
+                    "MESSAGE TINYTEXT " +
                     ");");*/
-
             stmt.executeUpdate(request);
 
             //stmt.executeUpdate("INSERT INTO MESSAGES VALUES(2,'@Mériem','hiiiii')");

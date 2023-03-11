@@ -39,9 +39,9 @@ public class ClientHandler extends Thread {
                 }
                 }
                 String message = line.substring(line.indexOf("#")+1);
-                DataBaseRequests.updateData("INSERT INTO MESSAGES VALUES(2,'@Mériem','hiifazzzzzzvgiii')");
-                /*DataBaseRequests.updateData("Insert into Messages values("+
-                                DataBaseRequests.findId()+",'"+username+"','"+message+"');");*/
+                //DataBaseRequests.updateData("INSERT INTO MESSAGES VALUES(2,'@Mériem','hiifazzzzzzvgiii')");
+                DataBaseRequests.updateData("Insert into MESSAGES values("+
+                                DataBaseRequests.findId()+",'"+username+"','"+message+"');");
                 if (publish){
                 System.out.printf(
                         "-> %s\n",
