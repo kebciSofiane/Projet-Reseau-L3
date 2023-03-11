@@ -5,18 +5,15 @@ public class CreateDatabase
     {
         try
         {
-            //étape 1: charger la classe driver
-            Class.forName("com.mysql.jdbc.Driver");
-            //étape 2: créer l'objet de connexion
             Connection conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:1234/mydt", "1mkll2345", "");
-            //étape 3: créer l'objet statement
+                    "jdbc:mysql://localhost:3306/BlogMessages", "sofiane", "8dd457sw");
             Statement stmt = conn.createStatement();
-            //étape 4: exécuter la requéte
-            System.out.println("Création de base de données...");
-            stmt.executeUpdate("CREATE DATABASE emp");
-            System.out.println("Base de données crée avec succés...");
-            //étape 5: fermez l'objet de connexion
+
+
+            stmt.executeUpdate("CREATE TABLE Messages (\n" +
+                    "    id int,\n" +
+                    "    message varchar(259)\n" +
+                    ");");
             conn.close();
         }
         catch(Exception e){
