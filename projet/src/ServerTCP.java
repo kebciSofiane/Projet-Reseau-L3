@@ -13,7 +13,6 @@ public class ServerTCP {
     // faut pas ajouter les donner une fois arrivées dans le serveur ?
     // The database doesn't save the ' character
 
-    static Map<String, ArrayList<Map<Integer, String>>> messages = new HashMap<>();
 
     public static void main(String[] args) throws IOException
     {

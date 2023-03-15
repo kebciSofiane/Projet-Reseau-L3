@@ -1,4 +1,3 @@
-
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -19,21 +18,27 @@ public class ClientTCP {
         System.out.print("Welcome, choose a username :");
         String username = scanner.nextLine();
 
-        String publish;
+        int request;
         String message;
 
         do {
-            System.out.println("Do you want to publish your next messages ? yes/no");
-            publish = scanner.nextLine();
-        } while (!publish.equals("yes") && !publish.equals("no"));
+            System.out.println("What do you want to do ?");
+            System.out.println("1-PUBLISH");
+            System.out.println("2-Receive IDs");
+            request = Integer.parseInt(scanner.nextLine());
+            System.out.println(request);
+        } while (request != 1 && request!=2);
 
-        if (publish.equals("yes")) message ="PUBLISH@"+username;
+        if (request==1) message ="PUBLISH@"+username;
+        else if (request==2) message ="RCV_IDS@"+username;
         else message ="@"+username;
+
 
         while(scanner.hasNextLine()){
             String textImput = scanner.nextLine()+"\n";
             message =message+"#"+textImput;
             DataOutputStream os = new DataOutputStream(s.getOutputStream());
+            System.out.println(message);
             os.writeUTF(message);
             message="";
             BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
