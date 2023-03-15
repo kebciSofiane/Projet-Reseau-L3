@@ -13,7 +13,6 @@ public class ServerTCP {
     // faut pas ajouter les donner une fois arrivées dans le serveur ?
     // The database doesn't save the ' character
 
-
     public static void main(String[] args) throws IOException
     {
         ServerSocket myserverSocket = new ServerSocket(12345);

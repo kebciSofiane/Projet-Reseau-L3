@@ -1,7 +1,7 @@
-
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class ClientTCP {
@@ -19,26 +19,39 @@ public class ClientTCP {
         System.out.print("Welcome, choose a username :");
         String username = scanner.nextLine();
 
-        String publish;
+        int request;
         String message;
 
         do {
-            System.out.println("Do you want to publish your next messages ? yes/no");
-            publish = scanner.nextLine();
-        } while (!publish.equals("yes") && !publish.equals("no"));
-
-        if (publish.equals("yes")) message ="PUBLISH@"+username;
-        else message ="@"+username;
-
-        while(scanner.hasNextLine()){
-            String textImput = scanner.nextLine()+"\n";
-            message =message+"#"+textImput;
-            DataOutputStream os = new DataOutputStream(s.getOutputStream());
-            os.writeUTF(message);
-            message="";
-            BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
-            String response = in.readLine(); // Lire la réponse
-            System.out.println(response);
+            System.out.println("What do you want to do ?");
+            System.out.println("1-PUBLISH");
+            System.out.println("2-Receive IDs");
+            request = Integer.parseInt(scanner.nextLine());
+            System.out.println(request);
+        } while (request != 1 && request!=2);
+        DataOutputStream os = new DataOutputStream(s.getOutputStream());
+        if (request==1){
+            message ="PUBLISH@"+username;
+            System.out.println("Your messages : ");
+            while(scanner.hasNextLine()){
+                String textInput = scanner.nextLine()+"\n";
+                message =message+"#"+textInput;
+                os.writeUTF(message);
+                message="";
+                BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+                String response = in.readLine();
+                System.out.println(response);
+            }
         }
+        else if (request==2){
+                message = "RCV_IDS@" + username+"\n";
+                os.writeUTF(message);
+                BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+                String response = in.readLine();
+                System.out.println("Here is some IDs");
+               String[] g = response.split("-");
+                for (int i =1; i<g.length;i++)
+                   System.out.println(g[i]);
+            }
     }
 }
