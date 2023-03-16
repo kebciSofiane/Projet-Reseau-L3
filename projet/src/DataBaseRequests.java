@@ -5,19 +5,22 @@ public class DataBaseRequests
 
      Connection conn;
      Statement stmt;
+     String message ="" ;
+
+
+
     public int findId() throws SQLException {
         int id = 0;
         ResultSet set = stmt.executeQuery("Select count(ID) AS NumberOfIds from MESSAGES;");
-        while(set.next()){
-            id = Integer.parseInt(set.getString("NumberOfIds"));
-        }
+        while(set.next()) id = Integer.parseInt(set.getString("NumberOfIds"));
         return id+1;
     }
 
     public DataBaseRequests() throws SQLException {
          conn = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/BlogMessages", "sofiane", "8dd457sw");
-         stmt = conn.createStatement();    }
+         stmt = conn.createStatement();
+    }
 
     public void closeBD() throws SQLException {
         conn.close();
@@ -28,8 +31,6 @@ public class DataBaseRequests
                 "USERNAME VARCHAR(20)," +
                 "MESSAGE TINYTEXT " +
                 ");");*/
-        //stmt.executeUpdate("INSERT INTO MESSAGES VALUES(2,'@Mériem','hiiiii')");
-        //System.out.println("Update successful");
         try {
             stmt.executeUpdate(request);
         } catch (SQLException e) {
@@ -37,15 +38,11 @@ public class DataBaseRequests
         }
 
     }
-
-    String message ="" ;
     public String selectDataID(String request) {
         ResultSet set;
         try {
             set = stmt.executeQuery(request);
-            while(set.next()){
-                message = message +"-"+(set.getInt("id"));
-            }
+            while(set.next()) message = message +"-"+(set.getInt("id"));
             //System.out.println("Update successful");
         } catch (SQLException e) {
             throw new RuntimeException(e);

@@ -24,35 +24,30 @@ public class ClientHandler extends Thread {
             DataInputStream is = new DataInputStream(socket.getInputStream());
 
             String line ;
-
             while ((line = is.readUTF()) != null){
                 String request;
-                requests[0] =false;
-                requests[1] =false;
-                requests[2] =false;
-                requests[3] =false;
-                requests[4] =false;
-
-
+                for (int i=0 ; i<5;i++) requests[i] =false;
 
                 try {
                     request =line.substring(0,line.indexOf(" ")).trim();
-                } catch (StringIndexOutOfBoundsException e)  {
+                }
+                catch (StringIndexOutOfBoundsException e)  {
                     request="ERROR";
                 }
-                if (request.equals("PUBLISH") || request.equals("ERROR")) requests[0] =true;
-                else if (request.equals("RCV_IDS")) requests[1]=true;
-                else if (request.equals("RCV_MSG"))requests[2]=true;
-                else if (request.equals("REPLY"))requests[3]=true;
-                else if (request.equals("REPUBLISH"))requests[4]=true;
-
+                switch (request){
+                    case "PUBLISH" : requests[0] =true;
+                    case "ERROR" : requests[0] =true;
+                    case "RCV_IDS" : requests[1] =true;
+                    case "RCV_MSG" : requests[2] =true;
+                    case "REPLY" : requests[3] =true;
+                    case "REPUBLISH" : requests[4] =true;
+                }
 
 
                 if (requests[0]){
                     DataBaseRequests dataBaseRequests = new DataBaseRequests();
                     if (this.username == "") this.username = line.substring(line.indexOf("@"), line.indexOf("#")).trim();
                     String message = line.substring(line.indexOf("#")+1);
-                    //DataBaseRequests.updateData("INSERT INTO MESSAGES VALUES(2,'@Mériem','hiifazzzzzzvgiii')");
                     dataBaseRequests.updateData("Insert into MESSAGES values("+
                             dataBaseRequests.findId()+",'"+ this.username +"','"+message+"');");
                     System.out.printf(
@@ -64,8 +59,8 @@ public class ClientHandler extends Thread {
                 }
                 else if (requests[1]) {
                     DataBaseRequests dataBaseRequests = new DataBaseRequests();
-                     set = dataBaseRequests.selectDataID("Select* from MESSAGES ORDER BY id DESC limit 5 ;");
-                     os.writeUTF(set);
+                    set = dataBaseRequests.selectDataID("Select* from MESSAGES ORDER BY id DESC limit 5 ;");
+                    os.writeUTF(set);
                     dataBaseRequests.closeBD();
 
                 }
@@ -77,6 +72,7 @@ public class ClientHandler extends Thread {
                     dataBaseRequests.closeBD();
                 }
                 else if (requests[3]) {
+
                     DataBaseRequests dataBaseRequests = new DataBaseRequests();
                     if (this.username == "") this.username = line.substring(line.indexOf("@"), line.indexOf("*")).trim();
                     String message = line.substring(line.indexOf("#")+1);
