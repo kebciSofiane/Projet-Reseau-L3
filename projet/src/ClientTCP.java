@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class ClientTCP {
@@ -36,11 +37,13 @@ public class ClientTCP {
                     System.out.println("3-Receive a message");
                     System.out.println("4-Answer to a message");
                     System.out.println("5-Republish a message");
-                    System.out.println("00-Quit");
+                    System.out.println("6-Connect");
+
+                System.out.println("00-Quit");
 
                     request = Integer.parseInt(scanner.nextLine());
 
-                } while (request != 1 && request!=2 && request!=3  && request!=4 && request!=5 && request!=00);
+                } while (request != 1 && request!=2 && request!=3  && request!=4 && request!=5 && request!=6 && request!=00);
 
         switch (request) {
             case 1:
@@ -101,6 +104,51 @@ public class ClientTCP {
                 is = new DataInputStream(s.getInputStream());
                 response = is.readUTF();
                 System.out.println(response);
+                break;
+
+            case 6:
+                message = "CONNECT @" + username + "\n";
+                os.writeUTF(message);
+                is = new DataInputStream(s.getInputStream());
+                response = is.readUTF();
+                System.out.println(response);
+                int choice ;
+                do {
+                    System.out.println("Choose an option");
+                    System.out.println("1-Subscribe");
+                    System.out.println("2-Subscribe");
+                    System.out.println();
+                    System.out.println("Your feed :");
+                    choice = Integer.parseInt(scanner.nextLine());
+                } while (choice!=1 && choice!=2);
+
+
+                switch (choice){
+                    case 1 :
+                        String userTagChoice;
+                        String tagOrUser;
+                        do {
+                            System.out.println("Subscribe to a user or a tag ? user/tag");
+                             userTagChoice = scanner.nextLine().toLowerCase();
+                        } while (!Objects.equals(userTagChoice, "tag") && !Objects.equals(userTagChoice, "user"));
+                        if (userTagChoice.equals("tag")){
+                             System.out.println("Tag : ");
+                             tagOrUser=scanner.nextLine().toLowerCase();
+                             message = "SUBSCRIBE #" + tagOrUser + "\n";
+
+                        }
+                        else {
+                            System.out.println("User : ");
+                            tagOrUser=scanner.nextLine().toLowerCase();
+                            message = "SUBSCRIBE @" + tagOrUser + "\n";
+
+                        }
+                        os.writeUTF(message);
+                }
+
+
+
+
                 break;
         }
 
