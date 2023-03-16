@@ -31,6 +31,8 @@ public class ClientHandler extends Thread {
                 requests[1] =false;
                 requests[2] =false;
                 requests[3] =false;
+                requests[4] =false;
+
 
 
                 try {
@@ -42,6 +44,8 @@ public class ClientHandler extends Thread {
                 else if (request.equals("RCV_IDS")) requests[1]=true;
                 else if (request.equals("RCV_MSG"))requests[2]=true;
                 else if (request.equals("REPLY"))requests[3]=true;
+                else if (request.equals("REPUBLISH"))requests[4]=true;
+
 
 
                 if (requests[0]){
@@ -71,7 +75,6 @@ public class ClientHandler extends Thread {
                     set = dataBaseRequests.selectDataMessage("Select MESSAGE from MESSAGES where ID ='"+id+"';");
                     os.writeUTF(set);
                     dataBaseRequests.closeBD();
-
                 }
                 else if (requests[3]) {
                     DataBaseRequests dataBaseRequests = new DataBaseRequests();
@@ -79,6 +82,7 @@ public class ClientHandler extends Thread {
                     String message = line.substring(line.indexOf("#")+1);
                     String id = line.substring(line.indexOf("*")+1,line.indexOf("#"));
                     set = dataBaseRequests.selectDataMessage("Select MESSAGE from MESSAGES where ID ='"+id+"';");
+                    if (!set.isEmpty()){
                     dataBaseRequests.updateData("Insert into MESSAGES values("+
                             dataBaseRequests.findId()+",'"+ this.username +"','"+message+"');");
                     System.out.printf("Replying to : "+ set);
@@ -86,11 +90,29 @@ public class ClientHandler extends Thread {
                             "-> %s\n",
                             this.username +": "+message);
                     os.writeUTF("Message sent successfully");
+                    }
+                    else os.writeUTF("ERROR : Wrong id");
                     dataBaseRequests.closeBD();
                 }
-            }
 
-
+                else if (requests[4]) {
+                    DataBaseRequests dataBaseRequests = new DataBaseRequests();
+                    if (this.username == "") this.username = line.substring(line.indexOf("@"), line.indexOf("*")).trim();
+                    String id = line.substring(line.indexOf("*")+1);
+                    set = dataBaseRequests.selectDataMessage("Select MESSAGE from MESSAGES where ID ='"+id+"';");
+                    if (!set.isEmpty()){
+                        dataBaseRequests.updateData("Insert into MESSAGES values("+
+                                dataBaseRequests.findId()+",'"+ this.username +"','"+set+"');");
+                        System.out.print("Republishing :");
+                        System.out.printf(
+                                "-> %s\n",
+                                this.username +": "+set);
+                        os.writeUTF("Message republished successfully");
+                    }
+                    else os.writeUTF("ERROR : Wrong id");
+                    dataBaseRequests.closeBD();
+                }
+                }
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (SQLException e) {

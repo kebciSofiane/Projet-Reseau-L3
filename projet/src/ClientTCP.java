@@ -27,14 +27,16 @@ public class ClientTCP {
             String message;
             do {
                     System.out.println("What do you want to do ?");
-                    System.out.println("1-PUBLISH");
+                    System.out.println("1-Publish a message");
                     System.out.println("2-Receive IDs");
                     System.out.println("3-Receive a message");
                     System.out.println("4-Answer to a message");
-                    System.out.println("00-Quit");
+                    System.out.println("5-Republish a message");
+
+                System.out.println("00-Quit");
                     request = Integer.parseInt(scanner.nextLine());
                     System.out.println(request);
-                } while (request != 1 && request!=2 && request!=3  && request!=4);
+                } while (request != 1 && request!=2 && request!=3  && request!=4 && request!=5);
 
         if (request==1){
             message ="PUBLISH @"+username;
@@ -83,7 +85,15 @@ public class ClientTCP {
             os.writeUTF(message);
             DataInputStream is = new DataInputStream(s.getInputStream());
             String response = is.readUTF();
-            System.out.print("The message is : ");
+            System.out.println(response);
+        }
+        else if (request==5){
+            System.out.print("The republished message id :");
+            int id = Integer.parseInt(scanner.nextLine());
+            message = "REPUBLISH @" +username+"*"+id +"\n";
+            os.writeUTF(message);
+            DataInputStream is = new DataInputStream(s.getInputStream());
+            String response = is.readUTF();
             System.out.println(response);
         }
         } while (request != 00);
