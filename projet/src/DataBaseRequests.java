@@ -1,5 +1,4 @@
 import java.sql.*;
-import java.util.ArrayList;
 
 public class DataBaseRequests
 {
@@ -38,13 +37,13 @@ public class DataBaseRequests
 
     }
 
-    String f="" ;
-    public String selectData(String request) {
+    String message ="" ;
+    public String selectDataID(String request) {
         ResultSet set;
         try {
             set = stmt.executeQuery(request);
             while(set.next()){
-                f=f+"-"+(set.getInt("id"));
+                message = message +"-"+(set.getInt("id"));
                 System.out.print("From: " + set.getString("USERNAME"));
                 System.out.print(", ID: " + set.getInt("id"));
                 System.out.println(", Message: " + set.getString("MESSAGE"));
@@ -55,7 +54,23 @@ public class DataBaseRequests
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return f;
+        return message;
     }
 
+
+    public String selectDataMessage(String request) {
+        ResultSet set;
+        try {
+            set = stmt.executeQuery(request);
+            while(set.next()){
+                message =(set.getString("MESSAGE"));
+            }
+            conn.close();
+            System.out.println("Update successful");
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return message;
+    }
     }
