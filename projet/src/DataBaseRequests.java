@@ -11,7 +11,6 @@ public class DataBaseRequests
         while(set.next()){
             id = Integer.parseInt(set.getString("NumberOfIds"));
         }
-        System.out.println(id);
         return id+1;
     }
 
@@ -20,6 +19,9 @@ public class DataBaseRequests
                 "jdbc:mysql://localhost:3306/BlogMessages", "sofiane", "8dd457sw");
          stmt = conn.createStatement();    }
 
+    public void closeBD() throws SQLException {
+        conn.close();
+    }
     public  void updateData(String request) {
         /*stmt.executeUpdate("create table MESSAGES (" +
                 "ID int PRIMARY KEY AUTO_INCREMENT," +
@@ -30,7 +32,6 @@ public class DataBaseRequests
         //System.out.println("Update successful");
         try {
             stmt.executeUpdate(request);
-            conn.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -44,13 +45,8 @@ public class DataBaseRequests
             set = stmt.executeQuery(request);
             while(set.next()){
                 message = message +"-"+(set.getInt("id"));
-                System.out.print("From: " + set.getString("USERNAME"));
-                System.out.print(", ID: " + set.getInt("id"));
-                System.out.println(", Message: " + set.getString("MESSAGE"));
             }
-            System.out.println("Update successful");
-            conn.close();
-
+            //System.out.println("Update successful");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -65,9 +61,6 @@ public class DataBaseRequests
             while(set.next()){
                 message =(set.getString("MESSAGE"));
             }
-            conn.close();
-            System.out.println("Update successful");
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

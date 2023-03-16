@@ -30,7 +30,8 @@ public class ClientTCP {
                     System.out.println("1-PUBLISH");
                     System.out.println("2-Receive IDs");
                     System.out.println("3-Receive a message");
-                    System.out.println("4-Quit");
+                    System.out.println("4-Answer to a message");
+                    System.out.println("00-Quit");
                     request = Integer.parseInt(scanner.nextLine());
                     System.out.println(request);
                 } while (request != 1 && request!=2 && request!=3  && request!=4);
@@ -64,6 +65,7 @@ public class ClientTCP {
 
         }
         else if (request==3){
+            System.out.print("The message id : ");
             String textInput = scanner.nextLine();
             message = "RCV_MSG " + textInput +"\n";
             os.writeUTF(message);
@@ -72,7 +74,19 @@ public class ClientTCP {
             System.out.print("The message is : ");
             System.out.println(response);
         }
-        } while (request != 4);
+        else if (request==4){
+            System.out.print("Your reply id :");
+            int id = Integer.parseInt(scanner.nextLine());
+            System.out.print("Your reply message :");
+            String messageReply = scanner.nextLine();
+            message = "REPLY @" +username+"*"+id+"#"+messageReply +"\n";
+            os.writeUTF(message);
+            DataInputStream is = new DataInputStream(s.getInputStream());
+            String response = is.readUTF();
+            System.out.print("The message is : ");
+            System.out.println(response);
+        }
+        } while (request != 00);
 
     }
 }
