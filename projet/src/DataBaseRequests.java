@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.Arrays;
 
 public class DataBaseRequests
 {
@@ -37,24 +38,35 @@ public class DataBaseRequests
         }
 
     }
-    public String selectDataID(String request,int limit,String tag) {
+    public String selectDataID(String request,int limit,String tags) {
         ResultSet set;
-        String id = "";
-        String message ="";
+        StringBuilder id = new StringBuilder();
+        String message;
         int n=0;
+        String[] tagsList = null;
+        if (tags!= null) tagsList =tags.split(" ");
         try {
             set = stmt.executeQuery(request);
+
             while(set.next() && n<limit){
                 message = (set.getString("MESSAGE"));
-                if (message.contains(tag)){
-                    id = id +"-"+(set.getInt("id"));
-                    n++;
-                }
+
+                if (tagsList!= null){
+                    System.out.println(tagsList[0]);
+                    if ( Arrays.stream(tagsList).anyMatch(message::contains)){
+                         System.out.println("jnfjkn");
+                         id.append("-").append(set.getInt("id"));
+                         n++;
+                }}
+                else {
+                         id.append("-").append(set.getInt("id"));
+                         n++;
+                     }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return id;
+        return id.toString();
     }
 
 

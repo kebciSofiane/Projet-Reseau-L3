@@ -44,20 +44,55 @@ public class Follower {
 
         switch (request) {
             case 2:
-                String tag ="hello";
-                String user = "sofiane";
-                int limit =3;
-                message = "RCV_IDS @" + user +"#"+tag +"<"+limit+"\n";
+                String tags ="";
+                String user = "";
+                int limit;
+                String rep;
+                System.out.print("Number of IDS : ");
+                limit = Math.abs(Integer.parseInt(scanner.nextLine()));
+
+                message = "RCV_IDS <"+limit+">";
+
+                do {
+                    System.out.println("Do you want to specify a username ? y/n");
+                    rep = scanner.nextLine();
+                } while (!Objects.equals(rep, "y") && !Objects.equals(rep, "n"));
+                if (rep.equals("y")){
+                    System.out.print("Username : ");
+                    user = scanner.nextLine();
+                    message = message+"@" + user;
+
+                }
+                System.out.println(message);
+
+                do {
+                    System.out.println("Do you want to specify a tag ? y/n");
+                    rep = scanner.nextLine();
+                } while (!Objects.equals(rep, "y") && !Objects.equals(rep, "n"));
+                if (rep.equals("y")){
+                    System.out.print("Tags separated by a blank space : ");
+                    tags = scanner.nextLine();
+                    message = message+"#"+tags+"\n";
+
+                }
                 os.writeUTF(message);
                 is = new DataInputStream(s.getInputStream());
                 response = is.readUTF();
-                System.out.print("Here is some IDs : ");
-                String[] g = response.split("-");
-                System.out.print("[" + g[1]);
-                for (int i = 2; i < g.length; i++)
-                    System.out.print("," + g[i]);
-                System.out.println("]");
-                System.out.println();
+
+                try {
+                    System.out.print("Here is some IDs : ");
+                    String[] g = response.split("-");
+                    System.out.print("[" + g[1]);
+                    for (int i = 2; i < g.length; i++)
+                        System.out.print("," + g[i]);
+                    System.out.println("]");
+                    System.out.println();
+                }
+                catch (ArrayIndexOutOfBoundsException e)  {
+                    System.out.println("No IDs found :(");
+                }
+
+
                 break;
 
             case 3:

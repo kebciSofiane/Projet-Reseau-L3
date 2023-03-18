@@ -64,14 +64,40 @@ public class ClientHandler extends Thread {
                 }
 
                 else if (requests[1]) {
-
-                    String tag = line.substring(line.indexOf("#")+1,line.indexOf("<"));
-                    String user = line.substring(line.indexOf("@"),line.indexOf("#"));
-                    int limit = Integer.parseInt(line.substring(line.indexOf("<")+1).trim());
-
+                    String tag;
+                    String user;
                     DataBaseRequests dataBaseRequests = new DataBaseRequests();
-                    set = dataBaseRequests.selectDataID
-                            ("Select* from MESSAGES where USERNAME= '"+user+"' ORDER BY id DESC;",limit,tag);
+
+
+
+                    try {
+                         tag = line.substring(line.indexOf("#")+1);
+                    }
+                    catch (StringIndexOutOfBoundsException e)  {
+                        tag =null ;
+                    }
+
+                    try {
+                         user = line.substring(line.indexOf("@"),line.indexOf("#"));
+                    }
+                    catch (StringIndexOutOfBoundsException e)  {
+                        try {
+                            user = line.substring(line.indexOf("@"));
+                        }
+                        catch (StringIndexOutOfBoundsException error){
+                            user = null;
+                        }
+                    }
+
+                    int limit = Integer.parseInt(line.substring(line.indexOf("<")+1,line.indexOf(">")).trim());
+                    System.out.println(limit);
+                    if (user != null)
+                        set = dataBaseRequests.selectDataID
+                                ("Select* from MESSAGES where USERNAME= '"+user+"' ORDER BY id DESC;",limit,tag);
+                    else
+                        set = dataBaseRequests.selectDataID("Select* from MESSAGES ORDER BY id DESC;",limit,tag);
+
+
                     System.out.println(set);
                     os.writeUTF(set);
                     dataBaseRequests.closeBD();
