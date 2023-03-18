@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.sql.SQLOutput;
 
 
 public class ClientHandler extends Thread {
@@ -36,7 +37,7 @@ public class ClientHandler extends Thread {
                     request="ERROR";
                 }
                 switch (request){
-                    case "PUBLISH" : requests[0] =true;
+                    case "PUBLISH"  : requests[0] =true;
                     case "ERROR" : requests[0] =true;
                     case "RCV_IDS" : requests[1] =true;
                     case "RCV_MSG" : requests[2] =true;
@@ -63,8 +64,15 @@ public class ClientHandler extends Thread {
                 }
 
                 else if (requests[1]) {
+
+                    String tag = line.substring(line.indexOf("#")+1,line.indexOf("<"));
+                    String user = line.substring(line.indexOf("@"),line.indexOf("#"));
+                    int limit = Integer.parseInt(line.substring(line.indexOf("<")+1).trim());
+
                     DataBaseRequests dataBaseRequests = new DataBaseRequests();
-                    set = dataBaseRequests.selectDataID("Select* from MESSAGES ORDER BY id DESC limit 5 ;");
+                    set = dataBaseRequests.selectDataID
+                            ("Select* from MESSAGES where USERNAME= '"+user+"' ORDER BY id DESC;",limit,tag);
+                    System.out.println(set);
                     os.writeUTF(set);
                     dataBaseRequests.closeBD();
 
@@ -118,9 +126,12 @@ public class ClientHandler extends Thread {
                     if (this.username == "") this.username = line.substring(line.indexOf("@")).trim();
                     os.writeUTF("Welcome back "+username);
                 }
+                
                 else if (requests[6]){
-                    if (this.username == "") this.username = line.substring(line.indexOf("@")).trim();
-                    os.writeUTF("Welcome back "+username);
+                    String tag = null;
+                    if (line.charAt(10)=='#') 
+                        tag = line.substring(line.indexOf("#")+1).trim();
+                    os.writeUTF("Welcome back "+tag);
                 }
 
 

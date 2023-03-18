@@ -1,11 +1,9 @@
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class ClientTCP {
+public class Follower {
 
     public static void main(String[] args) throws IOException {
         if (args.length<2) System.out.println("Saisir le serveur et le port");
@@ -32,7 +30,6 @@ public class ClientTCP {
             String message;
             do {
                     System.out.println("What do you want to do ?");
-                    System.out.println("1-Publish a message");
                     System.out.println("2-Receive IDs");
                     System.out.println("3-Receive a message");
                     System.out.println("4-Answer to a message");
@@ -46,21 +43,11 @@ public class ClientTCP {
                 } while (request != 1 && request!=2 && request!=3  && request!=4 && request!=5 && request!=6 && request!=00);
 
         switch (request) {
-            case 1:
-                message = "PUBLISH @" + username;
-                System.out.println("Your messages : ");
-                while (scanner.hasNextLine()) {
-                    String textInput = scanner.nextLine();
-                    message = message + "#" + textInput + "\n";
-                    os.writeUTF(message);
-                    message = "";
-                    is = new DataInputStream(s.getInputStream());
-                    response = is.readUTF();
-                    System.out.println(response);
-                }
-                break;
             case 2:
-                message = "RCV_IDS @" + username + "\n";
+                String tag ="hello";
+                String user = "sofiane";
+                int limit =3;
+                message = "RCV_IDS @" + user +"#"+tag +"<"+limit+"\n";
                 os.writeUTF(message);
                 is = new DataInputStream(s.getInputStream());
                 response = is.readUTF();
@@ -144,10 +131,11 @@ public class ClientTCP {
 
                         }
                         os.writeUTF(message);
+
                 }
-
-
-
+                is = new DataInputStream(s.getInputStream());
+                response = is.readUTF();
+                System.out.println(response);
 
                 break;
         }

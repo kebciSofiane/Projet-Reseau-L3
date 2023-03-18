@@ -5,7 +5,6 @@ public class DataBaseRequests
 
      Connection conn;
      Statement stmt;
-     String message ="" ;
 
 
 
@@ -38,20 +37,29 @@ public class DataBaseRequests
         }
 
     }
-    public String selectDataID(String request) {
+    public String selectDataID(String request,int limit,String tag) {
         ResultSet set;
+        String id = "";
+        String message ="";
+        int n=0;
         try {
             set = stmt.executeQuery(request);
-            while(set.next()) message = message +"-"+(set.getInt("id"));
-            //System.out.println("Update successful");
+            while(set.next() && n<limit){
+                message = (set.getString("MESSAGE"));
+                if (message.contains(tag)){
+                    id = id +"-"+(set.getInt("id"));
+                    n++;
+                }
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return message;
+        return id;
     }
 
 
     public String selectDataMessage(String request) {
+        String message ="" ;
         ResultSet set;
         try {
             set = stmt.executeQuery(request);
