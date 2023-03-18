@@ -19,7 +19,6 @@ public class ClientHandler extends Thread {
 
     @Override
     public void run() {
-        OutputStream out;
 
         try {
             DataOutputStream os = new DataOutputStream(socket.getOutputStream());
@@ -154,12 +153,8 @@ public class ClientHandler extends Thread {
                         tag = line.substring(line.indexOf("#")+1).trim();
                     os.writeUTF("Welcome back "+tag);
                 }
-
-
-
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
