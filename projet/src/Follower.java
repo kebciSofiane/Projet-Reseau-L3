@@ -1,3 +1,8 @@
+import Requests.RequestIDs;
+import Requests.RequestMessage;
+import Requests.RequestReply;
+import Requests.RequestRepublish;
+
 import java.io.*;
 import java.net.*;
 import java.util.Objects;
@@ -17,7 +22,6 @@ public class Follower {
         s.connect(address);
 
         DataOutputStream os = new DataOutputStream(s.getOutputStream());
-
 
         System.out.print("Welcome, choose a username :");
         String username = scanner.nextLine();
@@ -44,88 +48,26 @@ public class Follower {
 
         switch (request) {
             case 2:
-                String tags ="";
-                String user = "";
-                int limit;
-                String rep;
-                System.out.print("Number of IDS : ");
-                limit = Math.abs(Integer.parseInt(scanner.nextLine()));
-
-                message = "RCV_IDS <"+limit+">";
-
-                do {
-                    System.out.println("Do you want to specify a username ? y/n");
-                    rep = scanner.nextLine();
-                } while (!Objects.equals(rep, "y") && !Objects.equals(rep, "n"));
-                if (rep.equals("y")){
-                    System.out.print("Username : ");
-                    user = scanner.nextLine();
-                    message = message+"@" + user;
-
-                }
-                System.out.println(message);
-
-                do {
-                    System.out.println("Do you want to specify a tag ? y/n");
-                    rep = scanner.nextLine();
-                } while (!Objects.equals(rep, "y") && !Objects.equals(rep, "n"));
-                if (rep.equals("y")){
-                    System.out.print("Tags separated by a blank space : ");
-                    tags = scanner.nextLine();
-                    message = message+"#"+tags+"\n";
-
-                }
-                os.writeUTF(message);
-                is = new DataInputStream(s.getInputStream());
-                response = is.readUTF();
-
-                try {
-                    System.out.print("Here is some IDs : ");
-                    String[] g = response.split("-");
-                    System.out.print("[" + g[1]);
-                    for (int i = 2; i < g.length; i++)
-                        System.out.print("," + g[i]);
-                    System.out.println("]");
-                    System.out.println();
-                }
-                catch (ArrayIndexOutOfBoundsException e)  {
-                    System.out.println("No IDs found :(");
-                }
-
-
+                RequestIDs requestIDs = new RequestIDs(s);
+                requestIDs.requestIds();
                 break;
 
             case 3:
-                System.out.print("The message id : ");
-                String textInput = scanner.nextLine();
-                message = "RCV_MSG " + textInput + "\n";
-                os.writeUTF(message);
-                is = new DataInputStream(s.getInputStream());
-                response = is.readUTF();
-                System.out.print("The message is : ");
-                System.out.println(response);
+                RequestMessage requestMessage = new RequestMessage(s);
+                requestMessage.requestMessage();
                 break;
 
             case 4:
-                System.out.print("Your reply id :");
-                id = Integer.parseInt(scanner.nextLine());
-                System.out.print("Your reply message :");
-                String messageReply = scanner.nextLine();
-                message = "REPLY @" + username + "*" + id + "#" + messageReply + "\n";
-                os.writeUTF(message);
-                is = new DataInputStream(s.getInputStream());
-                response = is.readUTF();
-                System.out.println(response);
+                RequestReply requestReply =new RequestReply(s);
+                requestReply.reply(username);
                 break;
 
             case 5:
+                scanner =  new Scanner(System.in);
                 System.out.print("The republished message id :");
                 id = Integer.parseInt(scanner.nextLine());
-                message = "REPUBLISH @" + username + "*" + id + "\n";
-                os.writeUTF(message);
-                is = new DataInputStream(s.getInputStream());
-                response = is.readUTF();
-                System.out.println(response);
+                RequestRepublish requestRepublish = new RequestRepublish(s);
+                requestRepublish.republish(username,id);
                 break;
 
             case 6:

@@ -68,8 +68,6 @@ public class ClientHandler extends Thread {
                     String user;
                     DataBaseRequests dataBaseRequests = new DataBaseRequests();
 
-
-
                     try {
                          tag = line.substring(line.indexOf("#")+1);
                     }
@@ -90,15 +88,12 @@ public class ClientHandler extends Thread {
                     }
 
                     int limit = Integer.parseInt(line.substring(line.indexOf("<")+1,line.indexOf(">")).trim());
-                    System.out.println(limit);
                     if (user != null)
                         set = dataBaseRequests.selectDataID
                                 ("Select* from MESSAGES where USERNAME= '"+user+"' ORDER BY id DESC;",limit,tag);
                     else
                         set = dataBaseRequests.selectDataID("Select* from MESSAGES ORDER BY id DESC;",limit,tag);
 
-
-                    System.out.println(set);
                     os.writeUTF(set);
                     dataBaseRequests.closeBD();
 

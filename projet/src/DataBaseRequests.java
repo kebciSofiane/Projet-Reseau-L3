@@ -49,17 +49,15 @@ public class DataBaseRequests
             set = stmt.executeQuery(request);
 
             while(set.next() && n<limit){
-                message = (set.getString("MESSAGE"));
 
                 if (tagsList!= null){
-                    System.out.println(tagsList[0]);
+                    message = (set.getString("MESSAGE"));
                     if ( Arrays.stream(tagsList).anyMatch(message::contains)){
-                         System.out.println("jnfjkn");
-                         id.append("-").append(set.getInt("id"));
+                         id.append(set.getInt("id")).append("-");
                          n++;
                 }}
                 else {
-                         id.append("-").append(set.getInt("id"));
+                         id.append(set.getInt("id")).append("-");
                          n++;
                      }
             }

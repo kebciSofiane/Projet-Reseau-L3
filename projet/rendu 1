@@ -5,7 +5,7 @@ Utilisation ou non de threads/selector
 Découpage et organisation des classes
 - Organisation :
 dépôt git : https://github.com/kebciSofiane/Projet-Reseau-L3
-tests mis en place :
-- Etat d'avancement : Je n'ai pas beaucoup de tests, j'en ai un seul pour le moment afin de tester la base de donnéer
+Tests.tests mis en place :
+- Etat d'avancement : Je n'ai pas beaucoup de Tests.tests, j'en ai un seul pour le moment afin de tester la base de donnéer
 où vous en êtes dans le projet
 points de blocage éventuels
