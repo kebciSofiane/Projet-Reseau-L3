@@ -21,7 +21,6 @@ public class RequestRepublish {
 
 
     public void republish(String username, int id) throws IOException {
-
         message = "REPUBLISH @" + username + "*" + id + "\n";
         os.writeUTF(message);
         is = new DataInputStream(socket.getInputStream());

@@ -27,8 +27,9 @@ public class RequestPublish {
         while (scanner.hasNextLine()) {
             String textInput = scanner.nextLine();
             message = message + "#" + textInput + "\n";
+            System.out.println(message);
             os.writeUTF(message);
-            message = "";
+            message = "PUBLISH ";
             is = new DataInputStream(socket.getInputStream());
             String response = is.readUTF();
             System.out.println(response);

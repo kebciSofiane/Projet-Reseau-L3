@@ -52,6 +52,7 @@ public class ClientHandler extends Thread {
                     DataBaseRequests dataBaseRequests = new DataBaseRequests();
                     if (this.username == "") this.username = line.substring(line.indexOf("@"), line.indexOf("#")).trim();
                     String message = line.substring(line.indexOf("#")+1);
+                    System.out.println(message);
                     dataBaseRequests.updateData("Insert into MESSAGES values("+
                             dataBaseRequests.findId()+",'"+ this.username +"','"+message+"');");
                     System.out.printf(
@@ -66,9 +67,12 @@ public class ClientHandler extends Thread {
                     String tag;
                     String user;
                     DataBaseRequests dataBaseRequests = new DataBaseRequests();
+                    System.out.println("gd :"+line);
 
                     try {
-                         tag = line.substring(line.indexOf("#")+1);
+                         tag = line.substring(line.indexOf("#"));
+                         System.out.println("g :"+tag);
+
                     }
                     catch (StringIndexOutOfBoundsException e)  {
                         tag =null ;
@@ -90,8 +94,12 @@ public class ClientHandler extends Thread {
                     if (user != null)
                         set = dataBaseRequests.selectDataID
                                 ("Select* from MESSAGES where USERNAME= '"+user+"' ORDER BY id DESC;",limit,tag);
-                    else
+                    else {
+                        System.out.println("ftfhbt,yk");
                         set = dataBaseRequests.selectDataID("Select* from MESSAGES ORDER BY id DESC;",limit,tag);
+
+                    }
+
 
                     os.writeUTF(set);
                     dataBaseRequests.closeBD();

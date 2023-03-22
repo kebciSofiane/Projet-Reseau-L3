@@ -45,6 +45,7 @@ public class DataBaseRequests
         int n=0;
         String[] tagsList = null;
         if (tags!= null) tagsList =tags.split(" ");
+
         try {
             set = stmt.executeQuery(request);
 
@@ -52,15 +53,18 @@ public class DataBaseRequests
 
                 if (tagsList!= null){
                     message = (set.getString("MESSAGE"));
+
                     if ( Arrays.stream(tagsList).anyMatch(message::contains)){
                          id.append(set.getInt("id")).append("-");
-                         n++;
+                        n++;
                 }}
                 else {
                          id.append(set.getInt("id")).append("-");
-                         n++;
+
+                    n++;
                      }
             }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -71,6 +75,7 @@ public class DataBaseRequests
     public String selectDataMessage(String request) {
         String message ="" ;
         ResultSet set;
+        System.out.println(request);
         try {
             set = stmt.executeQuery(request);
             while(set.next()){
