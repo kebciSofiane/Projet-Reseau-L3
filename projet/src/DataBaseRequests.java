@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class DataBaseRequests
@@ -85,5 +86,21 @@ public class DataBaseRequests
             throw new RuntimeException(e);
         }
         return message;
+    }
+
+
+    public  ArrayList<String>  selectDataTagsAndUsernames(String request) {
+        ArrayList<String> keyWords = new ArrayList<>();
+        ResultSet set;
+        System.out.println(request);
+        try {
+            set = stmt.executeQuery(request);
+            while(set.next()){
+                keyWords.add(set.getString("TAG"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return keyWords;
     }
     }

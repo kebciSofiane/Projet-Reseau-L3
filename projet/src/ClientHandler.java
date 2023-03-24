@@ -21,6 +21,7 @@ public class ClientHandler extends Thread {
     public void run() {
 
         try {
+            System.out.println(socket);
             DataOutputStream os = new DataOutputStream(socket.getOutputStream());
             DataInputStream is = new DataInputStream(socket.getInputStream());
 
