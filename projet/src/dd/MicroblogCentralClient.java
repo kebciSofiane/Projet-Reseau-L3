@@ -15,6 +15,9 @@ public class MicroblogCentralClient {
         InetSocketAddress adress = new InetSocketAddress(1234);
         Socket s = new Socket();
         s.connect(adress);
+        System.out.print("Choose a username :");
+        String username = scanner.nextLine();
+        String message ="@"+username+"#";
 
         // Créer un thread pour recevoir les messages du serveur
         Thread receiveThread = new Thread(new Runnable() {
@@ -34,9 +37,11 @@ public class MicroblogCentralClient {
         receiveThread.start();
 
         while(scanner.hasNextLine()) {
-            String textImput = scanner.nextLine() + "\n";
+            String textImput = scanner.nextLine();
+            message= message +textImput+"\n";
             DataOutputStream os = new DataOutputStream(s.getOutputStream());
-            os.writeUTF(textImput);
+            os.writeUTF(message);
+            message ="@"+username+"#";
         }
     }
 }

@@ -32,7 +32,6 @@ public class MicroblogCentralServer {
         public ClientHandler(Socket clientSocket) {
             this.clientSocket = clientSocket;
         }
-
         @Override
         public void run() {
             try {
@@ -46,7 +45,10 @@ public class MicroblogCentralServer {
                 writer.println("Bienvenue sur le serveur de microblogs!");
 
                 String line;
+
                 while ((line = reader.readLine()) != null) {
+                    String username = line.substring(line.indexOf("@"), line.indexOf("#")).trim();
+                    sockets.put(clientSocket,username);
                     // Traiter les données envoyées par le client
                     System.out.println("Received data from client: " + line);
 
@@ -56,7 +58,7 @@ public class MicroblogCentralServer {
                            if (socket != clientSocket) {
                             OutputStream out = socket.getOutputStream();
                             PrintWriter w = new PrintWriter(out, true);
-                            w.println("Client " + mapentry.getValue() + ": " + line);
+                            w.println("Client " + mapentry.getValue() + ": " + line.substring(line.indexOf("#")+1).trim());
                         }
                     }
                 }
