@@ -1,3 +1,4 @@
+import Requests.RequestReply;
 
 import java.io.*;
 import java.net.*;
@@ -75,7 +76,9 @@ public class c {
                         message ="@"+username+"#";
                     }
                     break;
-
+                case 2:
+                    RequestReply requestReply =new RequestReply(s);
+                    requestReply.reply(username);
 
                 case 4 :
                     String answer;

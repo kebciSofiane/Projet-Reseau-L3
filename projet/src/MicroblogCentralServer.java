@@ -34,7 +34,7 @@ public class MicroblogCentralServer {
             try {
                 String username = null;
                 DataInputStream is = new DataInputStream(clientSocket.getInputStream());
-
+                DataBaseRequests dataBaseRequests = new DataBaseRequests();
                 allSockets = sockets;
                 System.out.println(sockets.size());
 
@@ -47,16 +47,25 @@ public class MicroblogCentralServer {
                     if (username == null) {
                         username = line.substring(line.indexOf("@")).trim();
                         sockets.replace(clientSocket, "-", username);
-
                     }
                     else{
-                        username = line.substring(line.indexOf("@"), line.indexOf("#")).trim();
+                    username = line.substring(line.indexOf("@"), line.indexOf("#")).trim();
+                    if (username.contains("*")) {
+                        username =line.substring(line.indexOf("@"), line.indexOf("*"));
+                        int idRcv = Integer.parseInt(line.substring(line.indexOf("*")+1,line.indexOf("#")));
+                        String replyingMessage=
+                                dataBaseRequests.selectDataMessage("Select MESSAGE FROM MESSAGES where ID="+idRcv+";");
+                        System.out.println("Replying to : "+replyingMessage);
+                    }
                     String message = line.substring(line.indexOf("#") + 1).trim();
-                    System.out.println("Received data from " +username+": " + message);
+                    int id = dataBaseRequests.findId();
+                    System.out.println("Received data from " +username+": id ="+id+" : " + message);
+                        dataBaseRequests.updateData("Insert into MESSAGES values("+id
+                               +",'"+ username +"','"+message+"');");
+
                     for (Map.Entry mapentry : sockets.entrySet()) {
                         Socket socket = (Socket) mapentry.getKey();
                         if (socket != clientSocket) {
-                            DataBaseRequests dataBaseRequests = new DataBaseRequests();
                             ArrayList<String> tagsList = dataBaseRequests.selectDataTags
                                     ("Select TAG from TAGS where USERNAME='" + mapentry.getValue() + "';");
                             ArrayList<String> favoriteUsersList = dataBaseRequests.selectDataUsernames
