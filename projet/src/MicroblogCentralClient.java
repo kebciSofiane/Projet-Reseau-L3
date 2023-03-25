@@ -1,4 +1,5 @@
 import Requests.RequestReply;
+import Requests.RequestRepublish;
 
 import java.io.*;
 import java.net.*;
@@ -20,7 +21,7 @@ public class MicroblogCentralClient {
         s.connect(adress);
         System.out.print("Choose a username :");
         String username = scanner.nextLine();
-        String message ="@"+username+"#";
+        String message ="PUBLISH @"+username+"#";
         OutputStreamWriter osw = new OutputStreamWriter(s.getOutputStream(), "UTF-8");
         osw.write("@"+username + "\n");
         osw.flush();
@@ -73,12 +74,21 @@ public class MicroblogCentralClient {
                     osw = new OutputStreamWriter(s.getOutputStream(), "UTF-8");
                     osw.write(message);
                     osw.flush();
-                    message ="@"+username+"#";
+                    message ="PUBLISH @"+username+"#";
                 }
                 break;
             case 2:
                 RequestReply requestReply =new RequestReply(s);
                 requestReply.reply(username);
+                break;
+
+            case 3:
+                scanner =  new Scanner(System.in);
+                System.out.print("The republished message id :");
+                int id = Integer.parseInt(scanner.nextLine());
+                RequestRepublish requestRepublish = new RequestRepublish(s);
+                requestRepublish.republish(username,id);
+                break;
 
             case 4 :
                 String answer;

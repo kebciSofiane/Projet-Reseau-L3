@@ -96,7 +96,6 @@ public class ClientHandler extends Thread {
                         set = dataBaseRequests.selectDataID
                                 ("Select* from MESSAGES where USERNAME= '"+user+"' ORDER BY id DESC;",limit,tag);
                     else {
-                        System.out.println("ftfhbt,yk");
                         set = dataBaseRequests.selectDataID("Select* from MESSAGES ORDER BY id DESC;",limit,tag);
 
                     }
