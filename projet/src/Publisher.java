@@ -19,8 +19,6 @@ public class Publisher {
 
             s.connect(address);
 
-
-
             System.out.print("Welcome Publisher, choose a username :");
             Scanner scanner = new Scanner(System.in);
             String username = scanner.nextLine();

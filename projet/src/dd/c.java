@@ -39,11 +39,10 @@ public class c {
         while(scanner.hasNextLine()) {
             String textImput = scanner.nextLine();
             message= message +textImput+"\n";
-
-            DataOutputStream os = new DataOutputStream(s.getOutputStream());
-            os.writeUTF(message);
+            OutputStreamWriter osw = new OutputStreamWriter(s.getOutputStream(), "UTF-8");
+            osw.write(message);
+            osw.flush();
             message ="@"+username+"#";
-
         }
     }
 }

@@ -17,10 +17,9 @@ public class MicroblogCentralServer {
 
         while (true) {
             Socket clientSocket = serverSocket.accept();
-            sockets.put(clientSocket,"@sofiane");
             System.out.println("A new connection identified from port : " + clientSocket.getPort());
             System.out.println("Thread assigned");
-
+            sockets.put(clientSocket,"-");
             // Créer un nouveau thread pour gérer la connexion du client
             executor.execute(new ClientHandler(clientSocket));
         }
@@ -35,36 +34,35 @@ public class MicroblogCentralServer {
         @Override
         public void run() {
             try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                String username = null;
+                DataInputStream is = new DataInputStream(clientSocket.getInputStream());
+
                 allSockets = sockets;
                 System.out.println(sockets.size());
 
-                // Envoyer un message de bienvenue au nouveau client
                 OutputStream outputStream = clientSocket.getOutputStream();
                 PrintWriter writer = new PrintWriter(outputStream, true);
                 writer.println("Bienvenue sur le serveur de microblogs!");
 
                 String line;
 
-                while ((line = reader.readLine()) != null) {
-                    String username = line.substring(line.indexOf("@"), line.indexOf("#")).trim();
-                    sockets.put(clientSocket,username);
-                    // Traiter les données envoyées par le client
-                    System.out.println("Received data from client: " + line);
+                while ((line = is.readLine()) != null) {
+                    System.out.println("line :"+line);
+                    if (line.length()>0)  username = line.substring(line.indexOf("@"), line.indexOf("#")).trim();
+                    sockets.replace(clientSocket,"-",username);
 
-                    // Envoyer le message à tous les clients connectés
-                        for (Map.Entry mapentry : sockets.entrySet()){
+                    System.out.println("Received data from client: " + line);
+                     for (Map.Entry mapentry : sockets.entrySet()){
                             Socket socket = (Socket) mapentry.getKey();
                            if (socket != clientSocket) {
                             OutputStream out = socket.getOutputStream();
                             PrintWriter w = new PrintWriter(out, true);
-                            w.println("Client " + mapentry.getValue() + ": " + line.substring(line.indexOf("#")+1).trim());
+                            w.println( username + ": " + line.substring(line.indexOf("#")+1).trim());
                         }
                     }
                 }
 
-                // Fermer la connexion avec le client
-                reader.close();
+                is.close();
                 sockets.remove(clientSocket);
                 clientSocket.close();
             } catch (IOException e) {
