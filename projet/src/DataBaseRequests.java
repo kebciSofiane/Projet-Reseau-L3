@@ -76,7 +76,6 @@ public class DataBaseRequests
     public String selectDataMessage(String request) {
         String message ="" ;
         ResultSet set;
-        System.out.println(request);
         try {
             set = stmt.executeQuery(request);
             while(set.next()){
@@ -89,14 +88,27 @@ public class DataBaseRequests
     }
 
 
-    public  ArrayList<String>  selectDataTagsAndUsernames(String request) {
+    public  ArrayList<String> selectDataTags(String request) {
         ArrayList<String> keyWords = new ArrayList<>();
         ResultSet set;
-        System.out.println(request);
         try {
             set = stmt.executeQuery(request);
             while(set.next()){
                 keyWords.add(set.getString("TAG"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return keyWords;
+    }
+
+    public  ArrayList<String>  selectDataUsernames(String request) {
+        ArrayList<String> keyWords = new ArrayList<>();
+        ResultSet set;
+        try {
+            set = stmt.executeQuery(request);
+            while(set.next()){
+                keyWords.add(set.getString("USER"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

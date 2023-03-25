@@ -1,5 +1,3 @@
-package dd;
-
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
@@ -18,6 +16,9 @@ public class c {
         System.out.print("Choose a username :");
         String username = scanner.nextLine();
         String message ="@"+username+"#";
+        OutputStreamWriter osw = new OutputStreamWriter(s.getOutputStream(), "UTF-8");
+        osw.write("@"+username + "\n");
+        osw.flush();
 
         // Créer un thread pour recevoir les messages du serveur
         Thread receiveThread = new Thread(new Runnable() {
@@ -39,7 +40,7 @@ public class c {
         while(scanner.hasNextLine()) {
             String textImput = scanner.nextLine();
             message= message +textImput+"\n";
-            OutputStreamWriter osw = new OutputStreamWriter(s.getOutputStream(), "UTF-8");
+             osw = new OutputStreamWriter(s.getOutputStream(), "UTF-8");
             osw.write(message);
             osw.flush();
             message ="@"+username+"#";
