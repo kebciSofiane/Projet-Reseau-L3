@@ -52,7 +52,7 @@ public class MicroblogCentralServer {
                     else{
                         username = line.substring(line.indexOf("@"), line.indexOf("#")).trim();
                     String message = line.substring(line.indexOf("#") + 1).trim();
-                    System.out.println("Received data from client: " + line);
+                    System.out.println("Received data from " +username+": " + message);
                     for (Map.Entry mapentry : sockets.entrySet()) {
                         Socket socket = (Socket) mapentry.getKey();
                         if (socket != clientSocket) {
