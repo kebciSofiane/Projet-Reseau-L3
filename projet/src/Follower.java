@@ -21,17 +21,13 @@ public class Follower {
 
         s.connect(address);
 
-        DataOutputStream os = new DataOutputStream(s.getOutputStream());
 
         System.out.print("Welcome, choose a username :");
         String username = scanner.nextLine();
 
         int request;
-        String response;
         int id;
-        DataInputStream is;
         do {
-            String message;
             do {
                     System.out.println("What do you want to do ?");
                     System.out.println("2-Receive IDs");
@@ -68,52 +64,6 @@ public class Follower {
                 id = Integer.parseInt(scanner.nextLine());
                 RequestRepublish requestRepublish = new RequestRepublish(s);
                 requestRepublish.republish(username,id);
-                break;
-
-            case 6:
-                message = "CONNECT @" + username + "\n";
-                os.writeUTF(message);
-                is = new DataInputStream(s.getInputStream());
-                response = is.readUTF();
-                System.out.println(response);
-                int choice ;
-                do {
-                    System.out.println("Choose an option");
-                    System.out.println("1-Subscribe");
-                    System.out.println("2-Subscribe");
-                    System.out.println();
-                    System.out.println("Your feed :");
-                    choice = Integer.parseInt(scanner.nextLine());
-                } while (choice!=1 && choice!=2);
-
-
-                switch (choice){
-                    case 1 :
-                        String userTagChoice;
-                        String tagOrUser;
-                        do {
-                            System.out.println("Subscribe to a user or a tag ? user/tag");
-                             userTagChoice = scanner.nextLine().toLowerCase();
-                        } while (!Objects.equals(userTagChoice, "tag") && !Objects.equals(userTagChoice, "user"));
-                        if (userTagChoice.equals("tag")){
-                             System.out.println("Tag : ");
-                             tagOrUser=scanner.nextLine().toLowerCase();
-                             message = "SUBSCRIBE #" + tagOrUser + "\n";
-
-                        }
-                        else {
-                            System.out.println("User : ");
-                            tagOrUser=scanner.nextLine().toLowerCase();
-                            message = "SUBSCRIBE @" + tagOrUser + "\n";
-
-                        }
-                        os.writeUTF(message);
-
-                }
-                is = new DataInputStream(s.getInputStream());
-                response = is.readUTF();
-                System.out.println(response);
-
                 break;
         }
 

@@ -61,7 +61,6 @@ public class DataBaseRequests
                 }}
                 else {
                          id.append(set.getInt("id")).append("-");
-
                     n++;
                      }
             }

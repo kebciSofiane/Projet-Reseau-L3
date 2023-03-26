@@ -45,6 +45,9 @@
     <filter-actions connection-id="945ba29c-6318-4bb3-ac46-315e0652e4a5" dataset="BlogMessages.MESSAGES" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="945ba29c-6318-4bb3-ac46-315e0652e4a5" dataset="BlogMessages.Messages" active-filter-id="EMPTY_FILTER" />
   </component>
+  <component name="DBNavigator.Project.ExecutionManager">
+    <retain-sticky-names value="false" />
+  </component>
   <component name="DBNavigator.Project.ObjectQuickFilterManager">
     <last-used-operator value="EQUAL" />
     <filters />

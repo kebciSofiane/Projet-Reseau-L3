@@ -1,8 +1,6 @@
 package Requests;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -27,13 +25,16 @@ public class RequestPublish {
         while (scanner.hasNextLine()) {
             String textInput = scanner.nextLine();
             message = message + "#" + textInput + "\n";
-            System.out.println(message);
-            os.writeUTF(message);
+            OutputStreamWriter osw = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
+            osw.write(message);
+            osw.flush();
             message = "PUBLISH ";
-            is = new DataInputStream(socket.getInputStream());
-            String response = is.readUTF();
-            System.out.println(response);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            System.out.println(reader.readLine());
+
+
         }
+
 
     }
 

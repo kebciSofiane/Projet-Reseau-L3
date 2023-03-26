@@ -1,9 +1,7 @@
 package Requests;
 
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -27,9 +25,11 @@ public class RequestMessage {
         System.out.print("The message id : ");
         String textInput = scanner.nextLine();
         message = "RCV_MSG " + textInput + "\n";
-        os.writeUTF(message);
-        is = new DataInputStream(socket.getInputStream());
-        response = is.readUTF();
+        OutputStreamWriter osw = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
+        osw.write(message);
+        osw.flush();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        response = reader.readLine();
         System.out.print("The message is : ");
         System.out.println(response);
     }

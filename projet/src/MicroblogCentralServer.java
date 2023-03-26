@@ -34,7 +34,6 @@ public class MicroblogCentralServer {
             try {
                 String username = null;
                 DataInputStream is = new DataInputStream(clientSocket.getInputStream());
-                DataOutputStream os = new DataOutputStream(clientSocket.getOutputStream());
 
                 DataBaseRequests dataBaseRequests = new DataBaseRequests();
                 allSockets = sockets;
@@ -46,6 +45,7 @@ public class MicroblogCentralServer {
                 String line;
 
                 while ((line = is.readLine()) != null) {
+                    System.out.println(line);
                     if (username == null) {
                         username = line.substring(line.indexOf("@")).trim();
                         sockets.replace(clientSocket, "-", username);
@@ -56,33 +56,34 @@ public class MicroblogCentralServer {
                     int idRcv;
                     String replyingMessage;
 
-                    switch (request) {
-                        case "REPLY":
-                            //username = line.substring(line.indexOf("@"), line.indexOf("#")).trim();
-                            username = line.substring(line.indexOf("@"), line.indexOf("*"));
-                             idRcv = Integer.parseInt(line.substring(line.indexOf("*") + 1, line.indexOf("#")));
-                             replyingMessage =
-                                    dataBaseRequests.selectDataMessage("Select MESSAGE FROM MESSAGES where ID=" + idRcv + ";");
-                            System.out.println("Replying to : " + replyingMessage);
-                            message =line.substring(line.indexOf("#") + 1).trim();
-                            break;
-                        case "REPUBLISH":
-                            username = line.substring(line.indexOf("@"), line.indexOf("*"));
-                            System.out.println(line);
-                             idRcv = Integer.parseInt(line.substring(line.indexOf("*") + 1));
-                             message =
-                                    dataBaseRequests.selectDataMessage("Select MESSAGE FROM MESSAGES where ID=" + idRcv + ";");
-                             break;
-                        case "PUBLISH" :
-                            message =line.substring(line.indexOf("#") + 1).trim();
-
-                    }
+                        switch (request) {
+                            case "REPLY" -> {
+                                //username = line.substring(line.indexOf("@"), line.indexOf("#")).trim();
+                                username = line.substring(line.indexOf("@"), line.indexOf("*"));
+                                idRcv = Integer.parseInt(line.substring(line.indexOf("*") + 1, line.indexOf("#")));
+                                replyingMessage =
+                                        dataBaseRequests.selectDataMessage("Select MESSAGE FROM MESSAGES where ID=" + idRcv + ";");
+                                System.out.println("Replying to : " + replyingMessage);
+                                message = line.substring(line.indexOf("#") + 1).trim();
+                            }
+                            case "REPUBLISH" -> {
+                                username = line.substring(line.indexOf("@"), line.indexOf("*"));
+                                System.out.println(line);
+                                idRcv = Integer.parseInt(line.substring(line.indexOf("*") + 1));
+                                message =
+                                        dataBaseRequests.selectDataMessage("Select MESSAGE FROM MESSAGES where ID=" + idRcv + ";");
+                            }
+                            case "PUBLISH" -> message = line.substring(line.indexOf("#") + 1).trim();
+                        }
                     int id = dataBaseRequests.findId();
-                    System.out.println("Received data from " +username+": id ="+id+" : " + message);
+                    System.out.println("->" +username+": id ="+id+" : " + message);
 
                         dataBaseRequests.updateData("Insert into MESSAGES values("+id
                                +",'"+ username +"','"+message+"');");
 
+                    OutputStreamWriter osw = new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8");
+                    osw.write("-Sent-");
+                    osw.flush();
                     for (Map.Entry mapentry : sockets.entrySet()) {
                         Socket socket = (Socket) mapentry.getKey();
                         if (socket != clientSocket) {
@@ -91,13 +92,15 @@ public class MicroblogCentralServer {
                             ArrayList<String> favoriteUsersList = dataBaseRequests.selectDataUsernames
                                     ("Select USER from USERS where USERNAME='" + mapentry.getValue() + "';");
 
-                            for (String tag : tagsList)
+                            for (String tag : tagsList) {
+                                assert message != null;
                                 if (message.contains(tag)) {
                                     OutputStream out = socket.getOutputStream();
                                     PrintWriter w = new PrintWriter(out, true);
                                     w.println(username + ": " + message);
                                     break;
                                 }
+                            }
                             for (String user : favoriteUsersList)
                                 if (username.equals(user)) {
                                     OutputStream out = socket.getOutputStream();
@@ -105,6 +108,7 @@ public class MicroblogCentralServer {
                                     w.println(username + ": " + message);
                                     break;
                                 }
+
                         }
 
                     }
