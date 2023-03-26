@@ -77,9 +77,6 @@ public class Server {
                             break;
 
                     }
-                    System.out.println(requests[1]);
-
-
 
                     if (requests[0]){
                         if (username == null) username = line.substring(line.indexOf("@"), line.indexOf("#")).trim();
@@ -94,15 +91,14 @@ public class Server {
                     }
 
                     else if (requests[1]) {
+                        System.out.println("lieb "+line);
 
-                        String tag;
-                        String user;
+                        String tag=null;
+                        String user=null;
                         try {
                             tag = line.substring(line.indexOf("#"));
-
                         }
-                        catch (StringIndexOutOfBoundsException e)  {
-                            tag =null ;
+                        catch (StringIndexOutOfBoundsException ignored)  {
                         }
 
                         try {
@@ -112,11 +108,10 @@ public class Server {
                             try {
                                 user = line.substring(line.indexOf("@"));
                             }
-                            catch (StringIndexOutOfBoundsException error){
-                                user = null;
+                            catch (StringIndexOutOfBoundsException ignored){
                             }
                         }
-
+                        System.out.println("tag "+tag);
                         int limit = Integer.parseInt(line.substring(line.indexOf("<")+1,line.indexOf(">")).trim());
                         if (user != null)
                             set = dataBaseRequests.selectDataID

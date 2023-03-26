@@ -25,6 +25,11 @@ public class MicroblogCentralClient {
         OutputStreamWriter osw = new OutputStreamWriter(s.getOutputStream(), "UTF-8");
         osw.write("@"+username + "\n");
         osw.flush();
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+        System.out.println(reader.readLine());
+
+
         DataBaseRequests dataBaseRequests= new DataBaseRequests();
 
         int request;

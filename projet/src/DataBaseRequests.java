@@ -27,11 +27,6 @@ public class DataBaseRequests
         conn.close();
     }
     public  void updateData(String request) {
-        /*stmt.executeUpdate("create table MESSAGES (" +
-                "ID int PRIMARY KEY AUTO_INCREMENT," +
-                "USERNAME VARCHAR(20)," +
-                "MESSAGE TINYTEXT " +
-                ");");*/
         try {
             stmt.executeUpdate(request);
         } catch (SQLException e) {
@@ -45,13 +40,12 @@ public class DataBaseRequests
         String message;
         int n=0;
         String[] tagsList = null;
-        if (tags!= null) tagsList =tags.split(" ");
+        if (tags!= null) tagsList =tags.substring(1).split(" ");
 
         try {
             set = stmt.executeQuery(request);
 
             while(set.next() && n<limit){
-
                 if (tagsList!= null){
                     message = (set.getString("MESSAGE"));
 
@@ -60,7 +54,8 @@ public class DataBaseRequests
                         n++;
                 }}
                 else {
-                         id.append(set.getInt("id")).append("-");
+                    System.out.println("rrrrr");
+                    id.append(set.getInt("id")).append("-");
                     n++;
                      }
             }

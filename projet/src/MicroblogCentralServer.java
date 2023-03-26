@@ -18,6 +18,10 @@ public class MicroblogCentralServer {
             Socket clientSocket = serverSocket.accept();
             System.out.println("A new connection identified from port : " + clientSocket.getPort());
             System.out.println("Thread assigned");
+            OutputStream outputStream = clientSocket.getOutputStream();
+            PrintWriter writer = new PrintWriter(outputStream, true);
+            writer.println("Bienvenue sur le serveur de microblogs!");
+            writer.flush();
             sockets.put(clientSocket,"-");
             executor.execute(new ClientHandler(clientSocket));
         }
@@ -37,15 +41,10 @@ public class MicroblogCentralServer {
 
                 DataBaseRequests dataBaseRequests = new DataBaseRequests();
                 allSockets = sockets;
-                System.out.println(sockets.size());
 
-                OutputStream outputStream = clientSocket.getOutputStream();
-                PrintWriter writer = new PrintWriter(outputStream, true);
-                writer.println("Bienvenue sur le serveur de microblogs!");
                 String line;
 
                 while ((line = is.readLine()) != null) {
-                    System.out.println(line);
                     if (username == null) {
                         username = line.substring(line.indexOf("@")).trim();
                         sockets.replace(clientSocket, "-", username);
@@ -63,13 +62,13 @@ public class MicroblogCentralServer {
                                 idRcv = Integer.parseInt(line.substring(line.indexOf("*") + 1, line.indexOf("#")));
                                 replyingMessage =
                                         dataBaseRequests.selectDataMessage("Select MESSAGE FROM MESSAGES where ID=" + idRcv + ";");
-                                System.out.println("Replying to : " + replyingMessage);
+                                System.out.print("Replying to : " + replyingMessage);
                                 message = line.substring(line.indexOf("#") + 1).trim();
                             }
                             case "REPUBLISH" -> {
                                 username = line.substring(line.indexOf("@"), line.indexOf("*"));
-                                System.out.println(line);
                                 idRcv = Integer.parseInt(line.substring(line.indexOf("*") + 1));
+                                System.out.print("Republishing: "  );
                                 message =
                                         dataBaseRequests.selectDataMessage("Select MESSAGE FROM MESSAGES where ID=" + idRcv + ";");
                             }
@@ -82,7 +81,7 @@ public class MicroblogCentralServer {
                                +",'"+ username +"','"+message+"');");
 
                     OutputStreamWriter osw = new OutputStreamWriter(clientSocket.getOutputStream(), "UTF-8");
-                    osw.write("-Sent-");
+                    osw.write("-Sent-\n");
                     osw.flush();
                     for (Map.Entry mapentry : sockets.entrySet()) {
                         Socket socket = (Socket) mapentry.getKey();
