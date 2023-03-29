@@ -34,9 +34,9 @@ public class DataBaseRequests {
 
     }
 
-    public String selectDataID(String request, int limit, String tags) {
+    public ArrayList<Integer> selectDataID(String request, int limit, String tags) {
         ResultSet set;
-        StringBuilder id = new StringBuilder();
+        ArrayList<Integer> id = new ArrayList<>();
         String message;
         int n = 0;
         String[] tagsList = null;
@@ -50,11 +50,11 @@ public class DataBaseRequests {
                     message = (set.getString("MESSAGE"));
 
                     if (Arrays.stream(tagsList).anyMatch(message::contains)) {
-                        id.append(set.getInt("id")).append("-");
+                        id.add(set.getInt("id"));
                         n++;
                     }
                 } else {
-                    id.append(set.getInt("id")).append("-");
+                    id.add(set.getInt("id"));
                     n++;
                 }
             }
@@ -62,7 +62,7 @@ public class DataBaseRequests {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return id.toString();
+        return id;
     }
 
 

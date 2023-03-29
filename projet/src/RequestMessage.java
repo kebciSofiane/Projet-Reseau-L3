@@ -1,31 +1,34 @@
-package Requests;
-
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class RequestRepublish {
-
+public class RequestMessage {
     DataOutputStream os;
     Socket socket;
     String message;
     DataInputStream is;
 
-    public RequestRepublish(Socket socket) throws IOException {
+
+    public RequestMessage(Socket socket) throws IOException {
         this.socket = socket;
         os = new DataOutputStream(socket.getOutputStream());
 
     }
 
 
-    public void republish(String username, int id) throws IOException {
-        System.out.println("The republished message id :");
-        message = "REPUBLISH @" + username + "*" + id + "\n";
+    public void requestMessage() throws IOException {
+        Scanner scanner =  new Scanner(System.in);
+        String response;
+        System.out.print("The message id : ");
+        String textInput = scanner.nextLine();
+        message = "RCV_MSG " + textInput + "\n";
         OutputStreamWriter osw = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
         osw.write(message);
         osw.flush();
         BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        System.out.println(reader.readLine());
+        response = reader.readLine();
+        System.out.print("The message is : ");
+        System.out.println(response);
     }
 
     }

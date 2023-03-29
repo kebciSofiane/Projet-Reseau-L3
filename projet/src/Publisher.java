@@ -1,7 +1,3 @@
-import Requests.RequestPublish;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -10,7 +6,6 @@ import java.util.Scanner;
 public class Publisher {
 
         public static void main(String[] args) throws IOException {
-            if (args.length < 2) System.out.println("Saisir le serveur et le port");
 
 
             InetSocketAddress address = new InetSocketAddress(12345);

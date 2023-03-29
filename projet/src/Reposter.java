@@ -1,16 +1,14 @@
-import Requests.RequestRepublish;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Reposter {
     public static void main(String[] args) throws IOException, SQLException {
-        if (args.length<2) System.out.println("Saisir le serveur et le port");
 
-        InetSocketAddress address = new InetSocketAddress(12345);
+        InetSocketAddress address = new InetSocketAddress("localhost",12345);
 
         Socket s = new Socket();
 
@@ -24,11 +22,10 @@ public class Reposter {
         String[] usersTab = users.split(" ");
         for (int i=0; i<usersTab.length;i++){
             DataBaseRequests dataBaseRequests = new DataBaseRequests();
-            String ids =dataBaseRequests.selectDataID("Select ID from MESSAGES where USERNAME='@"+usersTab[i]+"';",100,null);
-            String[] g = ids.split("-");
+            ArrayList<Integer> ids =dataBaseRequests.selectDataID("Select ID from MESSAGES where USERNAME='@"+usersTab[i]+"';",100,null);
             RequestRepublish requestRepublish =new RequestRepublish(s);
-            for (int j=0; j<g.length;j++)
-                requestRepublish.republish(userName, Integer.parseInt(g[j]));
+            for (int j=0; j<ids.size();j++)
+                requestRepublish.republish(userName, ids.get(i));
         }
     }
 }

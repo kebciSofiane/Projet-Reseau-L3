@@ -1,6 +1,3 @@
-import Requests.RequestReply;
-import Requests.RequestRepublish;
-
 import java.io.*;
 import java.net.*;
 import java.sql.SQLException;
@@ -54,7 +51,7 @@ public class MicroblogCentralClient2 {
 
             switch (request) {
                 case 1 :
-                    System.out.println("Your messages: ");
+                    System.out.println("Your messages (-SKIP- to stop sending) :");
                     Thread receiveThread = new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -73,7 +70,7 @@ public class MicroblogCentralClient2 {
                     while(true) {
                         String textImput = scanner.nextLine();
                         message= message +textImput+"\n";
-                        if (Objects.equals(textImput, "STOP")){
+                        if (Objects.equals(textImput, "SKIP")){
                             break;
                         }
                         osw = new OutputStreamWriter(s.getOutputStream(), "UTF-8");

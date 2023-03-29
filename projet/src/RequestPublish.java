@@ -1,5 +1,3 @@
-package Requests;
-
 import java.io.*;
 import java.net.Socket;
 import java.util.Objects;
@@ -22,10 +20,10 @@ public class RequestPublish {
     public void publish(String username) throws IOException {
         Scanner scanner =  new Scanner(System.in);
         message = "PUBLISH @" + username;
-        System.out.println("Your messages : ");
+        System.out.println("Your messages (-SKIP- to stop sending)  : ");
         while (scanner.hasNextLine()) {
             String textInput = scanner.nextLine();
-            if (Objects.equals(textInput, "STOP")){
+            if (Objects.equals(textInput, "SKIP")){
                 break;
             }
             message = message + "#" + textInput + "\n";

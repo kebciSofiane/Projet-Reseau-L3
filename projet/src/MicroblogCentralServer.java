@@ -34,7 +34,7 @@ public class MicroblogCentralServer {
         }
         @Override
         public void run() {
-            PrintWriter w = null;
+            PrintWriter w=null;
             try {
                 String username = null;
                 DataInputStream is = new DataInputStream(clientSocket.getInputStream());
@@ -74,12 +74,14 @@ public class MicroblogCentralServer {
                                 idRcv = Integer.parseInt(line.substring(line.indexOf("*") + 1));
                                 ArrayList<String> republishingUser =
                                         dataBaseRequests.selectData("Select USERNAME FROM MESSAGES where ID=" + idRcv + ";","USERNAME");
+
                                 System.out.println("Republishing "+republishingUser.get(0)+"'s message : "   );
                                 message =
                                         dataBaseRequests.selectData("Select MESSAGE FROM MESSAGES where ID=" + idRcv + ";","MESSAGE").get(0);
                             }
                             case "PUBLISH" -> message = line.substring(line.indexOf("#") + 1).trim();
                         }
+
                         int id = dataBaseRequests.findId();
                         System.out.println("-->" +username+": id ="+id+" : " + message);
 
@@ -128,9 +130,6 @@ public class MicroblogCentralServer {
                 System.out.println("ERROR database");
             }
 
-            finally {
-                w.println("ERROR");
-            }
         }
     }
 }

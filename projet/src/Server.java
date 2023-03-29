@@ -15,7 +15,6 @@ public class Server {
         while (true) {
             Socket clientSocket = serverSocket.accept();
             System.out.println("A new connection identified from port : " + clientSocket.getPort());
-            System.out.println("Thread assigned");
             executor.execute(new ClientHandler(clientSocket));
         }
     }
@@ -29,7 +28,7 @@ public class Server {
         public void run() {
             try {
                 String request;
-                String ids;
+                ArrayList<Integer> ids;
                 Boolean[] requests=new Boolean[10];
                 for (int i=0 ; i<9;i++) requests[i] =false;
                 OutputStream out = clientSocket.getOutputStream();
@@ -43,7 +42,7 @@ public class Server {
                 String line;
                 while ((line = is.readLine()) != null) {
 
-                    for (int i=0 ; i<9;i++) requests[i] =false;
+                    for (int i=0 ; i<5;i++) requests[i] =false;
 
                     try {
                         request =line.substring(0,line.indexOf(" ")).trim();
@@ -70,12 +69,6 @@ public class Server {
                         case "REPUBLISH" :
                             requests[4] =true;
                             break;
-                        case "CONNECT" :
-                            requests[5] =true;
-                            break;
-                        case "SUBSCRIBE" :
-                            requests[6] =true;
-                            break;
 
                     }
 
@@ -87,12 +80,11 @@ public class Server {
                         System.out.printf(
                                 "-> %s\n",
                                 username +": "+message);
-                        w.println("Message sent successfully");
+                        w.println("--Sent--");
 
                     }
 
                     else if (requests[1]) {
-                        System.out.println("lieb "+line);
                         String tag=null;
                         String user=null;
                         try {
@@ -141,16 +133,19 @@ public class Server {
                         String id = line.substring(line.indexOf("*")+1,line.indexOf("#"));
                         ArrayList<String> messageList= dataBaseRequests.selectData("Select MESSAGE FROM MESSAGES where ID=" + id + ";","MESSAGE");
                         String replyMessage = null;
+                        String replyUser =
+                                dataBaseRequests.selectData("Select USERNAME FROM MESSAGES where ID=" + id + ";","USERNAME").get(0);
+
                         if (!messageList.isEmpty()) replyMessage = messageList.get(0);
 
                         if (replyMessage!=null){
                             dataBaseRequests.updateData("Insert into MESSAGES values("+
                                     dataBaseRequests.findId()+",'"+ username +"','"+message+"');");
-                            System.out.printf("Replying to : "+ replyMessage);
+                            System.out.println("Replying to "+replyUser+"'s message : " + replyMessage);
                             System.out.printf(
                                     "-> %s\n",
                                     username +": "+message);
-                            w.println("Message sent successfully");
+                            w.println("--Sent--");
                         }
                         else
                             w.println("ERROR : Wrong id");
@@ -161,32 +156,23 @@ public class Server {
                         String id = line.substring(line.indexOf("*")+1);
                         ArrayList<String> messageList= dataBaseRequests.selectData("Select MESSAGE FROM MESSAGES where ID=" + id + ";","MESSAGE");
                         String republishMessage = null;
+                        String republishingUser =
+                                dataBaseRequests.selectData("Select USERNAME FROM MESSAGES where ID=" + id + ";","USERNAME").get(0);
                         if (!messageList.isEmpty()) republishMessage = messageList.get(0);
                         if (republishMessage!=null){
                             dataBaseRequests.updateData("Insert into MESSAGES values("+
                                     dataBaseRequests.findId()+",'"+ username +"','"+republishMessage+"');");
-                            System.out.print("Republishing :");
+
+                            System.out.println("Republishing "+republishingUser+"'s message : "   );
                             System.out.printf(
                                     "-> %s\n",
                                     username +": "+republishMessage);
-                            w.println("Message republished successfully");
+                            w.println("--republished--");
                         }
                         else w.println("ERROR : Wrong id");
 
                     }
 
-                    else if (requests[5]){
-                        if (username == "") username = line.substring(line.indexOf("@")).trim();
-                        w.println("Welcome back "+username);
-                    }
-
-                    else if (requests[6]){
-                        String tag = null;
-                        if (line.charAt(10)=='#')
-                            tag = line.substring(line.indexOf("#")+1).trim();
-                        w.println("Welcome back "+tag);
-
-                    }
                 }
 
                 is.close();

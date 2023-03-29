@@ -1,5 +1,3 @@
-package Requests;
-
 import java.io.*;
 import java.net.Socket;
 import java.util.Objects;
@@ -56,13 +54,7 @@ public class RequestIDs {
         response =reader.readLine();
 
         try {
-            System.out.print("Here is some IDs : ");
-            String[] ids = response.split("-");
-            System.out.print("[" + ids[1]);
-            for (int i = 2; i < ids.length; i++)
-                System.out.print("," + ids[i]);
-            System.out.println("]");
-            System.out.println();
+            System.out.print("Here is some IDs : "+response);
         }
         catch (ArrayIndexOutOfBoundsException e)  {
             System.out.println("No IDs found :(");
