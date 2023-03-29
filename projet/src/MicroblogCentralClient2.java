@@ -1,4 +1,5 @@
 import Requests.RequestReply;
+import Requests.RequestRepublish;
 
 import java.io.*;
 import java.net.*;
@@ -7,30 +8,32 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class c {
+public class MicroblogCentralClient2 {
 
     public static void main(String[] args) throws IOException, SQLException {
 
-        if (args.length<2) {
-            System.out.println("Saisir le serveur et le port");
-        }
         Scanner scanner =  new Scanner(System.in);
-        InetSocketAddress adress = new InetSocketAddress(1234);
+        InetSocketAddress adress = new InetSocketAddress(12345);
         Socket s = new Socket();
         s.connect(adress);
         System.out.print("Choose a username :");
         String username = scanner.nextLine();
-        String message ="@"+username+"#";
+        String message ="PUBLISH @"+username+"#";
         OutputStreamWriter osw = new OutputStreamWriter(s.getOutputStream(), "UTF-8");
         osw.write("@"+username + "\n");
         osw.flush();
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(s.getInputStream()));
+        System.out.println(reader.readLine());
+
+
         DataBaseRequests dataBaseRequests= new DataBaseRequests();
 
         int request;
         do {
             System.out.println("--------------------");
-            ArrayList<String> myTags = dataBaseRequests.selectDataTags("Select Tag from TAGS where USERNAME='@"+username+"';");
-            ArrayList<String> myFavUsers = dataBaseRequests.selectDataUsernames("Select USER from USERS where USERNAME='@"+username+"';");
+            ArrayList<String> myTags = dataBaseRequests.selectData("Select Tag from TAGS where USERNAME='@"+username+"';","TAG");
+            ArrayList<String> myFavUsers = dataBaseRequests.selectData("Select USER from USERS where USERNAME='@"+username+"';","USER");
             System.out.println("My tags : "+myTags);
             System.out.println("My Favorite users : "+myFavUsers);
             System.out.println("--------------------");
@@ -51,6 +54,7 @@ public class c {
 
             switch (request) {
                 case 1 :
+                    System.out.println("Your messages: ");
                     Thread receiveThread = new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -66,19 +70,30 @@ public class c {
                         }
                     });
                     receiveThread.start();
-
-                    while(scanner.hasNextLine()) {
+                    while(true) {
                         String textImput = scanner.nextLine();
                         message= message +textImput+"\n";
+                        if (Objects.equals(textImput, "STOP")){
+                            break;
+                        }
                         osw = new OutputStreamWriter(s.getOutputStream(), "UTF-8");
                         osw.write(message);
                         osw.flush();
-                        message ="@"+username+"#";
+                        message ="PUBLISH @"+username+"#";
                     }
                     break;
                 case 2:
                     RequestReply requestReply =new RequestReply(s);
                     requestReply.reply(username);
+                    break;
+
+                case 3:
+                    scanner =  new Scanner(System.in);
+                    System.out.print("The republished message id :");
+                    int id = Integer.parseInt(scanner.nextLine());
+                    RequestRepublish requestRepublish = new RequestRepublish(s);
+                    requestRepublish.republish(username,id);
+                    break;
 
                 case 4 :
                     String answer;

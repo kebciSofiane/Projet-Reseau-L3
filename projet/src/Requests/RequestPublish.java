@@ -2,6 +2,7 @@ package Requests;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class RequestPublish {
@@ -24,6 +25,9 @@ public class RequestPublish {
         System.out.println("Your messages : ");
         while (scanner.hasNextLine()) {
             String textInput = scanner.nextLine();
+            if (Objects.equals(textInput, "STOP")){
+                break;
+            }
             message = message + "#" + textInput + "\n";
             OutputStreamWriter osw = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
             osw.write(message);

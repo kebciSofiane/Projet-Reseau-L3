@@ -2,6 +2,7 @@
 import java.io.*;
 import java.net.*;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -28,7 +29,7 @@ public class Server {
         public void run() {
             try {
                 String request;
-                String set;
+                String ids;
                 Boolean[] requests=new Boolean[10];
                 for (int i=0 ; i<9;i++) requests[i] =false;
                 OutputStream out = clientSocket.getOutputStream();
@@ -92,7 +93,6 @@ public class Server {
 
                     else if (requests[1]) {
                         System.out.println("lieb "+line);
-
                         String tag=null;
                         String user=null;
                         try {
@@ -114,33 +114,39 @@ public class Server {
                         System.out.println("tag "+tag);
                         int limit = Integer.parseInt(line.substring(line.indexOf("<")+1,line.indexOf(">")).trim());
                         if (user != null)
-                            set = dataBaseRequests.selectDataID
+                            ids = dataBaseRequests.selectDataID
                                     ("Select* from MESSAGES where USERNAME= '"+user+"' ORDER BY id DESC;",limit,tag);
                         else {
-                            set = dataBaseRequests.selectDataID("Select* from MESSAGES ORDER BY id DESC;",limit,tag);
+                            ids = dataBaseRequests.selectDataID("Select* from MESSAGES ORDER BY id DESC;",limit,tag);
 
                         }
 
-                        w.println(set);
+                        w.println(ids);
 
 
 
                     }
                     else if (requests[2]) {
                         String id = line.substring(line.indexOf(" ")+1);
-                        set = dataBaseRequests.selectDataMessage("Select MESSAGE from MESSAGES where ID ='"+id+"';");
-                        w.println(set);
+                        String message = null;
+                        ArrayList<String> messageList= dataBaseRequests.selectData("Select MESSAGE FROM MESSAGES where ID=" + id + ";","MESSAGE");
+                        if (!messageList.isEmpty()) message = messageList.get(0);
+
+                        w.println(message);
                     }
 
                     else if (requests[3]) {
                         if (username == null) username = line.substring(line.indexOf("@"), line.indexOf("*")).trim();
                         String message = line.substring(line.indexOf("#")+1);
                         String id = line.substring(line.indexOf("*")+1,line.indexOf("#"));
-                        set = dataBaseRequests.selectDataMessage("Select MESSAGE from MESSAGES where ID ='"+id+"';");
-                        if (!set.isEmpty()){
+                        ArrayList<String> messageList= dataBaseRequests.selectData("Select MESSAGE FROM MESSAGES where ID=" + id + ";","MESSAGE");
+                        String replyMessage = null;
+                        if (!messageList.isEmpty()) replyMessage = messageList.get(0);
+
+                        if (replyMessage!=null){
                             dataBaseRequests.updateData("Insert into MESSAGES values("+
                                     dataBaseRequests.findId()+",'"+ username +"','"+message+"');");
-                            System.out.printf("Replying to : "+ set);
+                            System.out.printf("Replying to : "+ replyMessage);
                             System.out.printf(
                                     "-> %s\n",
                                     username +": "+message);
@@ -153,14 +159,16 @@ public class Server {
                     else if (requests[4]) {
                         if (username == null) username = line.substring(line.indexOf("@"), line.indexOf("*")).trim();
                         String id = line.substring(line.indexOf("*")+1);
-                        set = dataBaseRequests.selectDataMessage("Select MESSAGE from MESSAGES where ID ='"+id+"';");
-                        if (!set.isEmpty()){
+                        ArrayList<String> messageList= dataBaseRequests.selectData("Select MESSAGE FROM MESSAGES where ID=" + id + ";","MESSAGE");
+                        String republishMessage = null;
+                        if (!messageList.isEmpty()) republishMessage = messageList.get(0);
+                        if (republishMessage!=null){
                             dataBaseRequests.updateData("Insert into MESSAGES values("+
-                                    dataBaseRequests.findId()+",'"+ username +"','"+set+"');");
+                                    dataBaseRequests.findId()+",'"+ username +"','"+republishMessage+"');");
                             System.out.print("Republishing :");
                             System.out.printf(
                                     "-> %s\n",
-                                    username +": "+set);
+                                    username +": "+republishMessage);
                             w.println("Message republished successfully");
                         }
                         else w.println("ERROR : Wrong id");

@@ -32,8 +32,8 @@ public class MicroblogCentralClient {
         int request;
         do {
             System.out.println("--------------------");
-            ArrayList<String> myTags = dataBaseRequests.selectDataTags("Select Tag from TAGS where USERNAME='@"+username+"';");
-            ArrayList<String> myFavUsers = dataBaseRequests.selectDataUsernames("Select USER from USERS where USERNAME='@"+username+"';");
+            ArrayList<String> myTags = dataBaseRequests.selectData("Select Tag from TAGS where USERNAME='@"+username+"';","TAG");
+            ArrayList<String> myFavUsers = dataBaseRequests.selectData("Select USER from USERS where USERNAME='@"+username+"';","USER");
             System.out.println("My tags : "+myTags);
             System.out.println("My Favorite users : "+myFavUsers);
             System.out.println("--------------------");
