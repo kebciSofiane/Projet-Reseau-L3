@@ -12,11 +12,8 @@ public class MicroblogCentralClient {
 
     public static void main(String[] args) throws IOException, SQLException {
 
-        if (args.length<2) {
-            System.out.println("Saisir le serveur et le port");
-        }
         Scanner scanner =  new Scanner(System.in);
-        InetSocketAddress adress = new InetSocketAddress(1234);
+        InetSocketAddress adress = new InetSocketAddress(12345);
         Socket s = new Socket();
         s.connect(adress);
         System.out.print("Choose a username :");
