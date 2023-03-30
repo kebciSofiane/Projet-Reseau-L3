@@ -18,6 +18,8 @@ public class RequestRepublish {
 
     public void republish(String username, int id) throws IOException {
         message = "REPUBLISH @" + username + "*" + id + "\n";
+        System.out.println(message);
+
         OutputStreamWriter osw = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
         osw.write(message);
         osw.flush();

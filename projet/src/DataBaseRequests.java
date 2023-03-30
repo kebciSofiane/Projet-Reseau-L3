@@ -50,11 +50,11 @@ public class DataBaseRequests {
                     message = (set.getString("MESSAGE"));
 
                     if (Arrays.stream(tagsList).anyMatch(message::contains)) {
-                        id.add(set.getInt("id"));
+                        id.add(set.getInt("ID"));
                         n++;
                     }
                 } else {
-                    id.add(set.getInt("id"));
+                    id.add(set.getInt("ID"));
                     n++;
                 }
             }

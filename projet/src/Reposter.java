@@ -24,8 +24,9 @@ public class Reposter {
             DataBaseRequests dataBaseRequests = new DataBaseRequests();
             ArrayList<Integer> ids =dataBaseRequests.selectDataID("Select ID from MESSAGES where USERNAME='@"+usersTab[i]+"';",100,null);
             RequestRepublish requestRepublish =new RequestRepublish(s);
+
             for (int j=0; j<ids.size();j++)
-                requestRepublish.republish(userName, ids.get(i));
+                requestRepublish.republish(userName, ids.get(j));
         }
     }
 }
