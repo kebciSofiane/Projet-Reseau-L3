@@ -19,6 +19,22 @@ public class DataBaseRequests {
         conn = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/BlogMessages", "sofiane", "8dd457sw");
         stmt = conn.createStatement();
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS MESSAGES (\n" +
+                "    id int,\n" +
+                "    USERNAME varchar(20),\n"+
+                "    message varchar(259)\n" +
+                ");");
+        stmt.executeUpdate("Create table IF NOT EXISTS USERS ( " +
+                "USERNAME VARCHAR(30), " +
+                "USER VARCHAR(30), " +
+                "Primary key(USERNAME,USER)" +
+                ");");
+        stmt.executeUpdate("Create table IF NOT EXISTS TAGS ( " +
+                "USERNAME VARCHAR(30), " +
+                "TAG VARCHAR(30), " +
+                "Primary key(USERNAME,TAG)" +
+                ");");
+
     }
 
     public void closeBD() throws SQLException {

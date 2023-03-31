@@ -1,0 +1,64 @@
+Rapport :
+
+Le projet se compose en deux parties :
+
+Requêtes/réponses qui contient :
+La classe serveur Server.java et les client auquels il est attaché :
+- Reposter.java: Pour reposter tous les messages envoyés par un ou plusieurs utilisateurs.
+-Publisher.java: Afin de publier des messages dans le serveur.
+-Follower.java : Il nous permet de choisir entre :
+                    -Recevoir les ID de messages envoyés par un ou plusieurs utilisateurs ou des messages contenants des tags précis.
+                    -recevoir un message en donnant un ID.
+                    -reposter un message en donnant un ID.
+                    -finalement répondre à un message en donnant un ID.
+
+       La gestion des flux contenant :
+Le serveur MicroblogCentralServer.java  et ses deux clients identiques : -MicroblogCentralClient2.java
+-MicroblogCentralClient.java
+ et permettent de :
+                    -Envoyer des messages au serveur et au clients qui se sont abonnés à l’utilisateur ou à des tags.
+                    -Republier des messages.
+                    -Répondre à des messages.
+                    -S’abonner à des utilisateurs et/ou à des tags.
+                    -Se désabonner des utilisateurs et/ou des tags.
+
+La classe  DataBaseRequests.java permet de se connecter à une base de donnée locale contenant 4 méthodes principales :
+-findId(): qui renvoie le dernier ID ajouté à la base de donnée et lui ajoute 1 pour ajouter un nouveau message.
+ -DataBaseRequests(): Permet la connexion à la base de données.
+- updateData() : Afin d’ajouter des données dans la base de données ( requêtes Insert).
+-selectDataID(String request, int limit, String tags)) : Retourne une liste d’ID.
+-selectData(String request, String columnLabel) :  Retourne une liste de données telles que des messages, tags, utilisateurs…
+Les différentes tables :
+La table USERS : Qui stockent les noms favoris de chaque utilisateur.
+La table TAGS : Qui stockent les tags favoris de chaque utilisateur.
+La table MESSAGES : Qui stockent tous les messages envoyés par les clients avec le nom de l’utilisateur et un id unique.
+
+Voici  les requêtes de création des tables :
+
+Create table USERS ( USERNAME VARCHAR(30), USER VARCHAR(30), Primary key(USERNAME,USER));
+
+Create table TAGS ( USERNAME VARCHAR(30), TAG VARCHAR(30), Primary key(USERNAME,TAG));
+
+ CREATE TABLE IF NOT EXISTS MESSAGES (id int, USERNAME varchar(20), message varchar(259));
+
+Remarque importante sur la base de donnée dans le README.
+
+
+Pour connecter plusieurs clients en même temps, j’ai utilisé des threads qu’on peut trouver dans la classe static ClientHandler dans Server.java ou MicroblogCentralServer.java.
+
+MicroblogCentralServer.java :
+Afin d’envoyer les messages au clients abonnées à des tags, j’ai créé une hashmap Map<Socket,String> qui ajoute la paire (socket, username) à chaque fois qu’un nouveau client se connecte.
+A chaque fois qu’un client envoie un message, le serveur parcours la map et pour chaque socket connectée : consulte la base de données pour retrouver les utilisateur et tags favoris de cette dernière et puis vérifie si elle est abonnée à l'utilisateur émetteur du message, ou bien l’un des tags auxquels elle s’est abonnée figure dans le message, si l’un des cas est vérifié elle envoie le message au client.
+
+MicroblogCentralClient.java :
+Afin de recevoir les messages de chaque client instantanément, j’ai utilisé un thread receiveThread qui se lance en parallèle quand le client décide de publier des messages.
+
+
+Les classes : RequestIDs.java, RequestMessage.java, RequestPublish.java, RequestReply.java, RequestRepublish.java sont là pour organiser les code, afin que les clients les appelle seulement si il en a besoin.
+
+
+
+
+
+
+
