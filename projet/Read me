@@ -1,0 +1,24 @@
+Membre du groupe : Sofiane kebci
+Explication:
+
+         Afin d'exécuter la partie Requêtes/réponses :
+Il suffit de lancer le serveur Server.java puis l’un des clients suivants :
+Reposter.java: Pour reposter tous les messages envoyés par un ou plusieurs utilisateurs.
+Publisher.java: Afin de publier des messages dans le serveur.
+Follower.java : Il nous permet de choisir entre :
+                    -Recevoir les ID de messages envoyés par un ou plusieurs utilisateurs ou des messages contenants des tags précis.
+                    -recevoir un message en donnant un ID.
+                    -reposter un message en donnant un ID.
+                    -finalement répondre à un message en donnant un ID.
+
+       Pour de ce qui est de la partie gestion des flux :
+Il faut lancer le serveur MicroblogCentralServer.java puis l’un des clients suivant : MicroblogCentralClient2.java et MicroblogCentralClient.java (ils sont identiques) et permettent de :
+                    -Envoyer des messages au serveur et au clients qui se sont abonnés à l’utilisateur ou à des tags.
+                    -Republier des messages.
+                    -Répondre à des messages.
+                    -S’abonner à des utilisateurs et/ou à des tags.
+                    -Se désabonner des utilisateurs et/ou des tags.
+
+
+Remarque: J’ai créé une base de donnée sur mon pc ( en utilisant mes propres identifiant et mot de passe) et en utilisant la fonctionnalité JDBC de java, je n’ai pas tester sur un autre pc. Je ne pense pas que ça marche sur une autre machine ( du moins pas sur celles de la fac) à part si on modifie le lien ainsi que les informations de connexion qui se trouve dans la variable “conn” dans la classe DataBaseRequests.java.
+
